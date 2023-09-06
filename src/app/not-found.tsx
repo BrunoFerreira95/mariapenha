@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Icon404 from "../../assets/page404maria.svg";
+import Icon404 from "../assets/page404maria.svg";
 import Link from "next/link";
 
 const page404 = () => {
