@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, RefObject } from 'react'
 import { FiMenu } from 'react-icons/fi'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -9,10 +9,11 @@ import Geolocalizacao from '@assets/geolocalizacao.png'
 import { supabase } from '../lib/supabaseClient'
 import Nao from '@assets/Nao.svg'
 
+
+
 function Menumaria({ path }) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const menuRef = useRef(null)
-  
+  const menuRef = useRef(null)  
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -123,6 +124,12 @@ function Menumaria({ path }) {
               </span>
             </button>
           </Link>
+            <button className="w-full h-8 my-2 flex items-start justify-start menu-button ml-2">
+              <span>
+                Edite seus dados
+              </span>
+           
+            </button>
           <form method="post">
             <button formAction={"/auth/logout"} className="w-full h-8 my-2 flex items-start justify-start menu-button ml-10">
               <span
@@ -141,7 +148,3 @@ function Menumaria({ path }) {
 }
 
 export default Menumaria
-
-const handleSignOut = () => {
-  supabase.auth.signOut()
-}
