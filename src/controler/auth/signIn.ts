@@ -5,7 +5,7 @@ export default async function signInWithGoogle() {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'https://mariapenha.vercel.app/auth/callback'
+            redirectTo: 'http://localhost:3000/auth/callback'
         }
     })
 }

@@ -1,6 +1,6 @@
 export async function fetchUserClaims(setUser) {
   try {
-    const response = await fetch(`https://mariapenha.vercel.app/api/user`);
+    const response = await fetch(`http://localhost:3000/api/user`);
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -17,7 +17,7 @@ export async function setUser(data, id) {
   try {
     const { nome, tel } = data; // Desestruturação dos parâmetros
 
-    const apiUrl = 'https://mariapenha.vercel.app/api/users'; // URL da sua API
+    const apiUrl = 'http://localhost:3000/api/users'; // URL da sua API
 
     // Define os dados a serem enviados no corpo da solicitação POST
     const postData = {
