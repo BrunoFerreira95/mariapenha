@@ -1,17 +1,17 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Logo2 from '@assets/Logo2.png';
-import Voltar from "@/assets/voltar.svg"
-import InsigniaGcm from '@assets/insigniaGcm.svg';
-import { supabase } from '@/lib/supabaseClient';
-import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { format } from 'date-fns';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+import { supabase } from '@/lib/supabaseClient';
+
+import { format } from 'date-fns';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 import Sound from '../../../public/audio/panico.mp3'
+import { Logo2, InsigniaGCM } from '@assets/export'
 
 
 const Mapa = dynamic(() => import('../../components/Mapa'), { ssr: false });
@@ -107,7 +107,7 @@ export default function AlertaGuarda() {
           <div className="flex justify-end ">
             <Image
               className=" sm:h-36 w-20 sm:w-36 mb-16 mr-3"
-              src={InsigniaGcm}
+              src={InsigniaGCM}
               alt=""
             />
           </div>

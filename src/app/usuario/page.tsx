@@ -1,18 +1,17 @@
 'use client'
-import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import 'react-toastify/dist/ReactToastify.css'
 import Image from 'next/image'
-import Logo2 from '@assets/Logo2.png';
-import Sirene from '@assets/sirene.svg'
+import Link from 'next/link'
+
+import 'react-toastify/dist/ReactToastify.css'
+
 import MenuMaria from '../../components/Menumaria'
 import { supabase } from '../../lib/supabaseClient'
 import { useSession } from '@supabase/auth-helpers-react'
 import { initSession } from '@/controler/admin/users/users.controler'
 import { AuthSession } from '@supabase/supabase-js'
-import Instagram from '@assets/Instagram.svg'
-import Facebook from '@assets/Facebook.svg'
-import Site from '@assets/Site.svg'
+
+import { Logo2, Sirene, Site, Facebook, Instagram} from '@assets/export'
 
 export default function Maria() {
   const [session, setSession ] = useState<AuthSession | null>(null)
