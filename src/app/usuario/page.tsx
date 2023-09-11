@@ -108,21 +108,21 @@ export default function Maria() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src={Instagram} alt="Instagram" width={30} height={30} />
+              <Image src={Instagram} alt="Instagram" width={35} height={35} />
             </a>
             <a
               href="https://servicesecurity.com.br/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src={Site} alt="Site" width={30} height={30} />
+              <Image src={Site} alt="Site" width={35} height={35} className="ml-4"/>
             </a>
             <a
               href="https://www.facebook.com/ServiceTecnologiaLtda/?locale=pt_BR"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src={Facebook} alt="Facebook" width={30} height={30} />
+              <Image src={Facebook} alt="Facebook" width={35} height={35} className="ml-4"/>
             </a>
           </div>
           <div className="">
