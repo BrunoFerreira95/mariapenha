@@ -11,6 +11,7 @@ import Nao from '@assets/Nao.svg'
 
 
 
+
 function Menumaria({ path }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef(null)  
@@ -74,7 +75,9 @@ function Menumaria({ path }) {
             </button>
           </Link>
 
-          <Link href={`/usuario/contatos`} passHref>
+      
+
+          <Link href={`/usuario/rota`} passHref>
             <button className="w-full h-8 my-2 flex items-start justify-start menu-button ml-2">
               <Image
                 src={Contatos}
@@ -91,39 +94,7 @@ function Menumaria({ path }) {
             </button>
           </Link>
 
-          <Link href={`/usuario/rota`} passHref>
-            <button className="w-full h-8 my-2 flex items-start justify-start menu-button ml-2">
-              <Image
-                src={Geolocalizacao}
-                alt="Service"
-                className="h-6 w-6 mr-2 flex-shrink-0"
-              />
-              <span
-                style={{
-                  whiteSpace: 'nowrap',
-                  fontFamily: 'Poppins, sans-serif'
-                }}>
-                Policiamento próximo
-              </span>
-            </button>
-          </Link>
-
-          <Link href={`/usuario/conhecaservice`} passHref>
-            <button className="w-full h-8 my-2 flex items-start justify-start menu-button ml-2">
-              <Image
-                src={Logoservice}
-                alt="Service"
-                className="h-6 w-6 mr-2 flex-shrink-0"
-              />
-              <span
-                style={{
-                  whiteSpace: 'nowrap',
-                  fontFamily: 'Poppins, sans-serif'
-                }}>
-                Conheça a Service
-              </span>
-            </button>
-          </Link>
+          
             <button className="w-full h-8 my-2 flex items-start justify-start menu-button ml-2">
               <span>
                 Edite seus dados

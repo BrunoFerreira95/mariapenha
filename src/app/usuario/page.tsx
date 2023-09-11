@@ -35,45 +35,45 @@ export default function Maria() {
           telefone: profiles[0].telefone,
           data: dataFormatada,
           latitude,
-          longitude
-        }
+          longitude,
+        },
       ])
       .select()
       console.log(erro2)
+
   }
-  
 
   async function handleSendAlert() {
     try {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
           try {
-            const latitude = position.coords.latitude
-            const longitude = position.coords.longitude
-            const dataAtual = new Date().toLocaleString('pt-BR', {
-              timeZone: 'UTC'
-            })
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const dataAtual = new Date().toLocaleString("pt-BR", {
+              timeZone: "UTC",
+            });
             const dataFormatada = dataAtual.replace(
               /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/,
-              '$3-$2-$1 $4:$5:$6'
-            )
+              "$3-$2-$1 $4:$5:$6"
+            );
 
             const ponto = {
               lat: latitude,
-              lng: longitude
-            }
-            let local
+              lng: longitude,
+            };
+            let local;
 
             createANewAlert(dataFormatada, latitude, longitude, local)
           } catch (error) {
-            console.error('Erro no processamento da localização:', error)
+            console.error("Erro no processamento da localização:", error);
           }
-        })
+        });
       } else {
-        console.error('Geolocalização não suportada neste navegador.')
+        console.error("Geolocalização não suportada neste navegador.");
       }
     } catch (error) {
-      console.error('Erro na função handleSendAlert:', error)
+      console.error("Erro na função handleSendAlert:", error);
     }
   }
 
@@ -94,7 +94,8 @@ export default function Maria() {
               <div className="flex justify-center mb-10">
                 <button
                   className="bg-gradient-to-r from-purple-300 to-indigo-300 mt-4 w-40 h-40 sm:h-36 sm:w-36 rounded-full flex flex-col items-center justify-center shadow-lg hover:shadow-xl focus:outline-none"
-                  onClick={handleSendAlert}>
+                  onClick={handleSendAlert}
+                >
                   <Image
                     src={Sirene}
                     alt="Emergencia"
@@ -108,11 +109,34 @@ export default function Maria() {
             </div>
           </div>
 
+          <div className="flex justify-center space-x-4 mt-20">
+            <a
+              href="https://www.instagram.com/servicesecurity/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image src={Instagram} alt="Instagram" width={30} height={30} />
+            </a>
+            <a
+              href="https://servicesecurity.com.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image src={Site} alt="Site" width={30} height={30} />
+            </a>
+            <a
+              href="https://www.facebook.com/ServiceTecnologiaLtda/?locale=pt_BR"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image src={Facebook} alt="Facebook" width={30} height={30} />
+            </a>
+          </div>
           <div className="">
             <MenuMaria path={undefined} />
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }
