@@ -10,6 +10,9 @@ import { supabase } from '../../lib/supabaseClient'
 import { useSession } from '@supabase/auth-helpers-react'
 import { initSession } from '@/controler/admin/users/users.controler'
 import { AuthSession } from '@supabase/supabase-js'
+import Instagram from '@assets/Instagram.svg'
+import Facebook from '@assets/Facebook.svg'
+import Site from '@assets/Site.svg'
 
 export default function Maria() {
   const [session, setSession ] = useState<AuthSession | null>(null)
