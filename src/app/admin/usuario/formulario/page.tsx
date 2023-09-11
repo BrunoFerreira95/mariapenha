@@ -1,5 +1,5 @@
 'use client'
-import Topoonda from '@/components/Topoonda'
+import Topoonda from '@/components/Header'
 import ButtonVoltar from '@/components/voltar'
 import { fetchCidadesData } from '@/controler/admin/cidades/cidades.controler'
 import { fetchEscolasData, fetchEscolasDataWhereCity } from '@/controler/admin/escolas/escolas.controler'
