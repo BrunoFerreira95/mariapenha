@@ -1,53 +1,49 @@
-'use client'
-import React, { useState, useEffect, useRef, RefObject } from 'react'
-import { FiMenu } from 'react-icons/fi'
-import Image from 'next/image'
-import Link from 'next/link'
-import Logoservice from '@assets/Original.png'
-import Contatos from '@assets/contatos.svg'
-import Geolocalizacao from '@assets/geolocalizacao.png'
-import { supabase } from '../lib/supabaseClient'
-import Nao from '@assets/Nao.svg'
-import Home from '../assets/Home.svg'
-import Sair from '../assets/Sair.svg'
-import Edite from '../assets/Edite.svg'
-
-
-
+import React, { useState, useEffect, useRef } from 'react';
+import { FiMenu } from 'react-icons/fi';
+import Image from 'next/image';
+import Link from 'next/link';
+import Logoservice from '@assets/Original.png';
+import Contatos from '@assets/contatos.svg';
+import Geolocalizacao from '@assets/geolocalizacao.png';
+import { supabase } from '../lib/supabaseClient';
+import Nao from '@assets/Nao.svg';
+import Home from '../assets/Home.svg';
+import Sair from '../assets/Sair.svg';
+import Edite from '../assets/Edite.svg';
 
 function Menumaria({ path }) {
-  const [menuOpen, setMenuOpen] = useState(true)
-  const menuRef = useRef(null)  
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
+    const handleMenuToggle = () => {
+      setMenuOpen(!menuOpen);
+    };
+
     const handleOutsideClick = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(true)
+        setMenuOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('click', handleOutsideClick)
+    document.addEventListener('click', handleOutsideClick);
+    document.addEventListener('click', handleMenuToggle);
 
     return () => {
-      document.removeEventListener('click', handleOutsideClick)
-    }
-  }, [])
-
-  const handleMenuToggle = () => {
-    setMenuOpen(!menuOpen)
-  }
-
-  const handleMenuClick = (event) => {
-    event.stopPropagation()
-    setMenuOpen(!menuOpen)
-  }
+      document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('click', handleMenuToggle);
+    };
+  }, [menuOpen]);
 
   return (
     <>
       <div className="flex justify-between items-center">
         <button
           className="flex justify-center items-center w-8 h-8"
-          onClick={handleMenuClick}
+          onClick={(event) => {
+            event.stopPropagation();
+            setMenuOpen(!menuOpen);
+          }}
           style={{ position: 'absolute', top: '8px', left: '8px' }}
         >
           <FiMenu size={24} />
@@ -135,7 +131,7 @@ function Menumaria({ path }) {
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default Menumaria
+export default Menumaria;
