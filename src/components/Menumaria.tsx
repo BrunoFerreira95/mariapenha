@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,25 +15,15 @@ function Menumaria({ path }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  useEffect(() => {
-    const handleMenuToggle = () => {
-      setMenuOpen(!menuOpen);
-    };
+  const handleMenuToggle = () => {
+    setMenuOpen(!menuOpen);
+  };
 
-    const handleOutsideClick = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleOutsideClick);
-    document.addEventListener('click', handleMenuToggle);
-
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-      document.removeEventListener('click', handleMenuToggle);
-    };
-  }, [menuOpen]);
+  const handleOutsideClick = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setMenuOpen(false);
+    }
+  };
 
   return (
     <>
@@ -42,7 +32,7 @@ function Menumaria({ path }) {
           className="flex justify-center items-center w-8 h-8"
           onClick={(event) => {
             event.stopPropagation();
-            setMenuOpen(!menuOpen);
+            handleMenuToggle();
           }}
           style={{ position: 'absolute', top: '8px', left: '8px' }}
         >
