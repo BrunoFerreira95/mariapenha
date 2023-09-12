@@ -4,6 +4,7 @@ import Voltar from "@assets/voltar.svg";
 import Link from "next/link";
 import Image from "next/image";
 import Menumaria from "../../../components/Menumaria";
+import Header from "@/components/Header";
 
 const Contatos = () => {
   const [name, setName] = useState("");
@@ -81,7 +82,7 @@ const Contatos = () => {
   return (
     <div className="w-screen sm:flex justify-center bg-gradient-to-b from-purple-500 to-pink-200">
       <div className="min-h-screen max-h-fit max-w-xl 0 py-2 flex flex-col">
-        <div className="m-2 ml-5"></div>
+        <Header />
 
         <div>
           <form

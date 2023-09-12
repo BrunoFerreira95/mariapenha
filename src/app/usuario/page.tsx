@@ -14,6 +14,7 @@ import { AuthSession } from '@supabase/supabase-js'
 import { Logo2, Sirene, Site, Facebook, Instagram } from '@assets/export'
 import dynamic from 'next/dynamic'
 import { MyTimer } from '@/components/MyTimer'
+import Header from '@/components/Header'
 export default function Maria() {
   const [session, setSession] = useState<AuthSession | null>(null)
   const [dialogSwitch, setDialogSwitch] = useState(false)
@@ -102,13 +103,7 @@ export default function Maria() {
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
         <div className="min-h-screen max-h-fit max-w-xl 0 py-2 sm:flex  sm:flex-col">
-          <div className="mt-5 h-fit"></div>
-          <Image
-            src={Logo2}
-            alt="Logo Maria da Penha"
-            className="w-72 h-72 mx-auto"
-            priority={true}
-          />
+          <Header />
 
           <div className="flex justify-center">
             <div className="">
