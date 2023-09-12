@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, RefObject } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -11,22 +11,29 @@ import { useSession } from '@supabase/auth-helpers-react'
 import { initSession } from '@/controler/admin/users/users.controler'
 import { AuthSession } from '@supabase/supabase-js'
 
-import { Logo2, Sirene, Site, Facebook, Instagram} from '@assets/export'
-
+import { Logo2, Sirene, Site, Facebook, Instagram } from '@assets/export'
+import dynamic from 'next/dynamic'
+import { MyTimer } from '@/components/MyTimer'
 export default function Maria() {
-  const [session, setSession ] = useState<AuthSession | null>(null)
+  const [session, setSession] = useState<AuthSession | null>(null)
+  const [dialogSwitch, setDialogSwitch] = useState(false)
+
+  const dialogRef: RefObject<HTMLDialogElement> = useRef(null)
+  const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null)
+
   
+
   useEffect(() => {
     initSession(setSession)
   }, [])
 
   async function createANewAlert(dataFormatada, latitude, longitude) {
 
-    
+
     let { data: profiles, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', session?.user?.id)
+      .from('profiles')
+      .select('*')
+      .eq('id', session?.user?.id)
     console.log(profiles[0].full_name)
 
     const { data: result, error: erro2 } = await supabase
@@ -41,8 +48,14 @@ export default function Maria() {
         },
       ])
       .select()
-      console.log(erro2)
+    console.log(erro2)
 
+  }
+  
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + 10); // 10 minutes timer
+  async function handleEmergencPress() {
+    showModal(dialogRef)
   }
 
   async function handleSendAlert() {
@@ -79,6 +92,12 @@ export default function Maria() {
     }
   }
 
+  useEffect(() => {
+    if(dialogSwitch){
+      showModal(dialog2Ref)
+    }
+  }, [dialogSwitch])
+
   return (
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
@@ -96,7 +115,7 @@ export default function Maria() {
               <div className="flex justify-center mb-10">
                 <button
                   className="bg-gradient-to-r from-purple-300 to-indigo-300 mt-4 w-40 h-40 sm:h-36 sm:w-36 rounded-full flex flex-col items-center justify-center shadow-lg hover:shadow-xl focus:outline-none"
-                  onClick={handleSendAlert}
+                  onClick={handleEmergencPress}
                 >
                   <Image
                     src={Sirene}
@@ -124,21 +143,38 @@ export default function Maria() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src={Site} alt="Site" width={35} height={35} className="ml-4"/>
+              <Image src={Site} alt="Site" width={35} height={35} className="ml-4" />
             </a>
             <a
               href="https://www.facebook.com/ServiceTecnologiaLtda/?locale=pt_BR"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src={Facebook} alt="Facebook" width={35} height={35} className="ml-4"/>
+              <Image src={Facebook} alt="Facebook" width={35} height={35} className="ml-4" />
             </a>
           </div>
           <div className="">
             <MenuMaria path={undefined} />
           </div>
-        </div>
-      </div>
+          <dialog ref={dialogRef} className='sm:w-1/4 w-1/5 rounded-lg border-2 border-black'>
+            <div className='flex justify-end'>
+              <button onClick={() => closeModal(dialogRef)} className='m-5'>Fechar</button>
+
+            </div>
+            <MyTimer expiryTimestamp={time} closeModal={() => closeModal(dialogRef)} setDialogSwitch={setDialogSwitch} handleAlert={handleSendAlert}/>
+          </dialog >
+          
+        </div >
+      </div >
     </>
   );
+}
+
+
+function showModal(dialogRef: RefObject<HTMLDialogElement>) {
+  dialogRef.current?.showModal()
+}
+
+function closeModal(dialogRef: RefObject<HTMLDialogElement>) {
+  dialogRef.current?.close()
 }
