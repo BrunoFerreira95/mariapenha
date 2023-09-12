@@ -16,13 +16,13 @@ import Edite from '../assets/Edite.svg'
 
 
 function Menumaria({ path }) {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(true)
   const menuRef = useRef(null)  
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false)
+        setMenuOpen(true)
       }
     }
 
