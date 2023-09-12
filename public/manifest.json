@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Proteja-",
-    "short_name": "me",
+    "name": "Proteja-me",
+    "short_name": "Proteja-me",
     "icons": [
         {
             "src": "/icon-192x192.png",

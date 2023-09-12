@@ -110,7 +110,7 @@ export default function Maria() {
               <div className="flex justify-center mb-10">
                 <button
                   className="bg-gradient-to-r from-purple-300 to-indigo-300 mt-4 w-40 h-40 sm:h-36 sm:w-36 rounded-full flex flex-col items-center justify-center shadow-lg hover:shadow-xl focus:outline-none"
-                  onClick={handleEmergencPress}
+                  onClick={handleSendAlert}
                 >
                   <Image
                     src={Sirene}
@@ -156,7 +156,6 @@ export default function Maria() {
               <button onClick={() => closeModal(dialogRef)} className='m-5'>Fechar</button>
 
             </div>
-            <MyTimer expiryTimestamp={time} closeModal={() => closeModal(dialogRef)} setDialogSwitch={setDialogSwitch} handleAlert={handleSendAlert}/>
           </dialog >
           
         </div >

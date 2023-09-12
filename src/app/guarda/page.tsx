@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import Sound from '../../../public/audio/panico.mp3'
+import Sound from '../../../public/panico.mp3'
 import { Logo2, InsigniaGCM } from '@assets/export'
 
 
@@ -50,8 +50,8 @@ export default function AlertaGuarda() {
     fetchAllAlertMaria(setAlerts);
   }, []);
 
+  const audio = new Audio(Sound);
   const playSound = () => {
-    const audio = new Audio('../../../public/audio/panico.mp3');
     audio.play();
   };
 
