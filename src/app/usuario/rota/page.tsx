@@ -124,11 +124,7 @@ const Contatos = () => {
               </button>
             </div>
 
-            <div className="flex justify-center">
-              <Link href={"/usuario"}>
-                <Image src={Voltar} alt="Botão de voltar" className="mt-5" />
-              </Link>
-            </div>
+           
           </form>
         </div>
       </div>
