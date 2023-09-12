@@ -1,54 +1,32 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
-import Logo2 from '@assets/Logo2.png'
-import Voltar from '@assets/voltar.svg'
+import React, { useState } from "react"
+import Image from "next/image"
+import Logo from "../assets/Logo2.png"
 
-export function Header({ isMiddle, stopCall }) {
-  const router = useRouter()
+const Header = () => {
+  return (
+    <>
+      <div>
 
-  function handleVoltar() {
-    if(stopCall) {
-      stopCall()
-    }
-    router.back()
-  }
-  let header
-  if (!isMiddle) {
-    header = (
-      <div className="flex justify-between sm:mx-14 mx-4 items-center">
-        <Link
-          href="/"
-          onClick={handleVoltar}
-          className="text-lg sm:w-12 sm:h-16 w-28 h-9 mt-6">
-          <Image className="sm:w-4  w-4" src={Voltar} alt="Botão voltar" />
-        </Link>
-
-        <div className="flex justify-center">
-          <Image
-            className="sm:w-24 w-20 "
-            src={Logo2}
-            alt="Logo do Apoio Monitorado"
-            priority={true}
-          />
+        <div className="bg-purple-200 w-full flex justify-center">
+          <Image className="mt-5 h-56 w-56" src={Logo} alt="" priority={true}/>
+        </div>
+        <div className="relative">
+          <svg
+            className="absolute"
+            viewBox="0 0 1440 180"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            <path
+              fill="#e9d5ff"
+              d="M0 37 Q 360 20 720 37 Q 1080 54 1440 37 L 1440 0 L 0 0 Z"
+            ></path>
+          </svg>
         </div>
       </div>
-    )
-  } else {
-    header = (
-      <div className="flex justify-center sm:mx-14 mx-4 items-center">
-        <div className="flex justify-center">
-          <Image
-            className="sm:w-52 w-44"
-            src={Logo2}
-            alt="Logo do Apoio Monitorado"
-            priority={true}
-          />
-        </div>
-      </div>
-    )
-  }
+    </>
+  );
+};
 
-  return <>{header}</>
-}
+export default Header;

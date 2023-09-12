@@ -1,5 +1,5 @@
 "use client";
-import Topoonda from "@/components/Topoonda";
+import { Header } from '@components/export'
 import { initSession } from "@/controler/admin/users/users.controler";
 import { setUser } from "@/controler/users/user.controler";
 import { AuthSession } from "@supabase/supabase-js";
@@ -38,7 +38,7 @@ const Visitante = () => {
   return (
     <>
       <div className="bg-white h-screen w-screen">
-        <Topoonda />
+        <Header />
 
         <div className="bg-gray-100 p-8 md:mx-auto md:w-3/5 text-center font-poppins sm:mt-20 mt-14 mx-2 ">
           <p className="text-2xl text-black mb-4">

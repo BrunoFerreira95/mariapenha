@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import signInWithGoogle from "@/controler/auth/signIn"
-import Topoonda from "@/components/Topoonda"
+import Topoonda from "@/components/Header"
 
 type SignIn = {
   email: string

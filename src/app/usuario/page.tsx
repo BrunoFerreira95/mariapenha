@@ -1,39 +1,48 @@
-"use client";
-import Link from "next/link";
-import React from "react";
-import "react-toastify/dist/ReactToastify.css";
-import Image from "next/image";
-import Logo2 from "@assets/Logo2.png";
-import Sirene from "@assets/sirene.svg";
-import MenuMaria from "../../components/Menumaria";
-import { supabase } from "../../lib/supabaseClient";
-import { useSession } from "@supabase/auth-helpers-react";
-import Instagram from "@assets/Instagram.svg";
-import Site from "@assets/Site.svg";
-import Facebook from "@assets/Facebook.svg";
+'use client'
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+
+import 'react-toastify/dist/ReactToastify.css'
+
+import MenuMaria from '../../components/Menumaria'
+import { supabase } from '../../lib/supabaseClient'
+import { useSession } from '@supabase/auth-helpers-react'
+import { initSession } from '@/controler/admin/users/users.controler'
+import { AuthSession } from '@supabase/supabase-js'
+
+import { Logo2, Sirene, Site, Facebook, Instagram} from '@assets/export'
 
 export default function Maria() {
-  const session = useSession();
+  const [session, setSession ] = useState<AuthSession | null>(null)
+  
+  useEffect(() => {
+    initSession(setSession)
+  }, [])
 
-  console.log(session?.user.user_metadata);
+  async function createANewAlert(dataFormatada, latitude, longitude) {
 
-  async function createANewAlert(session, dataFormatada, latitude, longitude) {
-    const { data: result, error } = await supabase
-      .from("alertaGuarda")
+    
+    let { data: profiles, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session?.user?.id)
+    console.log(profiles[0].full_name)
+
+    const { data: result, error: erro2 } = await supabase
+      .from('alertaGuarda')
       .insert([
         {
-          nome: session?.user.user_metadata.nome,
-          cpf: session?.user.user_metadata.cpf,
-          telefone: session?.user.user_metadata.telefone,
+          nome: profiles[0].full_name,
+          telefone: profiles[0].telefone,
           data: dataFormatada,
           latitude,
           longitude,
         },
       ])
-      .select();
+      .select()
+      console.log(erro2)
 
-    console.log(result);
-    console.log(error);
   }
 
   async function handleSendAlert() {
@@ -57,7 +66,7 @@ export default function Maria() {
             };
             let local;
 
-            createANewAlert(session, dataFormatada, latitude, longitude, local);
+            createANewAlert(dataFormatada, latitude, longitude, local)
           } catch (error) {
             console.error("Erro no processamento da localização:", error);
           }
