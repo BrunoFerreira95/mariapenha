@@ -26,7 +26,7 @@ const Mapa = (data: AlertProps) => {
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker position={[data.data.latitude, data.data.longitude]}>
                 <Popup>
-                    {'teste'}
+                    {data.data.nome}
                 </Popup>
             </Marker>
         </MapContainer>
