@@ -36,13 +36,14 @@ const Contatos = () => {
       },
       {
         name: "DELEGACIA DA MULHER",
-        address: "R. Aristídes Lau Sampaio, 159 - Jardim Paulista, Ourinhos - SP, 19907-090",
+        address:
+          "R. Aristídes Lau Sampaio, 159 - Jardim Paulista, Ourinhos - SP, 19907-090",
       },
       {
         name: "POLICIA MILITAR",
-        address: "Av. Domingos Perino, 1055 - Vila Perino, Ourinhos - SP, 19911-781",
-      },
-      
+        address:
+          "Av. Domingos Perino, 1055 - Vila Perino, Ourinhos - SP, 19911-781",
+      }
     ];
 
     setPolicePoints(mockPolicePoints);
@@ -87,7 +88,7 @@ const Contatos = () => {
     <div className="w-screen sm:flex justify-center bg-gradient-to-b bg-purple-200">
       <div className="min-h-screen max-h-fit max-w-xl 0 py-2 flex flex-col">
         <Header />
-        <Logo />
+        
 
         <div>
           <form
