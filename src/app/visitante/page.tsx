@@ -56,12 +56,6 @@ const Visitante = () => {
             aplicativo. Após realizar o cadastro, aguarde enquanto confirmamos
             seus dados. Em breve vamos liberar o seu acesso 😉
           </p>
-          <button
-            onClick={() => showModal(dialogRef)}
-            className="bg-slate-400 px-5 py-2 rounded-lg mt-2"
-          >
-            Informe seus dados
-          </button>
 
           <p className="mt-4 text-lg text-gray-700">
             Atenciosamente,
