@@ -47,7 +47,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="w-screen sm:flex justify-center bg-gradient-to-b from-purple-500 to-pink-200">
+    <div className="w-screen sm:flex justify-center bg-gradient-to-b bg-purple-200">
       <div className="min-h-screen max-h-fit max-w-xl 0 py-2 flex flex-col">
         <Header />
         <div>

@@ -80,7 +80,7 @@ const Contatos = () => {
   };
 
   return (
-    <div className="w-screen sm:flex justify-center bg-gradient-to-b from-purple-500 to-pink-200">
+    <div className="w-screen sm:flex justify-center bg-gradient-to-b bg-purple-200">
       <div className="min-h-screen max-h-fit max-w-xl 0 py-2 flex flex-col">
         <Header />
 
@@ -99,19 +99,20 @@ const Contatos = () => {
                   <td>190</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">GCM</td>
+                  <td className="pr-4">GCM 1</td>
                   <td>153</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">VIOLÊNCIA DOMÉSTICA</td>
-                  <td>180</td>
+                  <td className="pr-4">GCM 2</td>
+                  <td>(14) 3335-9320</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">DELEGACIA DA MULHER</td>
-                  <td style={{ whiteSpace: "nowrap" }}>100</td>
+                  <td className="pr-4">Delegacia da Mulher</td>
+                  <td>(14) 3322-5343</td>
                 </tr>
               </tbody>
             </table>
+
 
             {/* Adicione o botão "Visualizar Pontos de Policiamento" e configure o link */}
             <div className="flex justify-center mt-4">
