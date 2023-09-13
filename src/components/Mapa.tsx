@@ -22,7 +22,7 @@ type AlertProps = {
 const Mapa = (data: AlertProps) => {
     return (
 
-        <MapContainer center={[data.data.latitude, data.data.longitude]} zoom={20} style={{ height: '500px' }}>
+        <MapContainer center={[`${data.data.latitude}`, `${data.data.longitude}`]} zoom={20} style={{ height: '500px' }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker position={[data.data.latitude, data.data.longitude]}>
                 <Popup>
