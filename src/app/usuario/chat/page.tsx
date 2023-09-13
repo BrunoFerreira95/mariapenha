@@ -51,7 +51,7 @@ const Chat = () => {
     <div className="w-screen sm:flex justify-center bg-gradient-to-b bg-purple-200">
       <div className="min-h-screen max-h-fit max-w-xl 0 py-2 flex flex-col">
         <Header />
-        <Logo />
+        
         <div>
           <form
             className="mx-4 bg-white p-5 rounded-xl mt-4"
