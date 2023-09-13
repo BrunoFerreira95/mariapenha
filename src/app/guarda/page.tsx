@@ -167,7 +167,7 @@ export default function AlertaGuarda() {
                             </button>
                             <button
                               onClick={(e) => openDialogEndereco(alert)}
-                              className="bg-slate-300 ml-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                              className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
                             >
                               <span className="text-black font-bold text-sm">
                                 Endereço
