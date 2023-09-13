@@ -15,6 +15,8 @@ import { Logo2, Sirene, Site, Facebook, Instagram } from '@assets/export'
 import dynamic from 'next/dynamic'
 import { MyTimer } from '@/components/MyTimer'
 import Header from '@/components/Header'
+import Logo from '@/components/logo';
+
 export default function Maria() {
   const [session, setSession] = useState<AuthSession | null>(null)
   const [dialogSwitch, setDialogSwitch] = useState(false)
@@ -109,20 +111,21 @@ export default function Maria() {
       <div className=" bg-purple-200 flex justify-center items-center">
         <div className="min-h-screen max-h-fit max-w-xl 0 py-2 sm:flex  sm:flex-col">
           <Header />
+          
 
           <div className="flex justify-center">
             <div className="">
               <div className="flex justify-center mb-10">
                 <button
-                  className="bg-gradient-to-r from-purple-300 to-indigo-300 mt-4 w-40 h-40 sm:h-36 sm:w-36 rounded-full flex flex-col items-center justify-center shadow-lg hover:shadow-xl focus:outline-none"
+                  className="bg-gradient-to-r from-purple-300 to-indigo-300 mt-20 w-48 h-48 sm:h-36 sm:w-36 rounded-full flex flex-col items-center justify-center shadow-lg hover:shadow-xl focus:outline-none"
                   onClick={handleSendAlert}
                 >
                   <Image
                     src={Sirene}
                     alt="Emergencia"
-                    className="sm:h-10 sm:w-10 h-14 w-14"
+                    className="sm:h-10 sm:w-10 h-20 w-20"
                   />
-                  <p className="text-center text-white font-bold mt-2">
+                  <p className="text-center text-xl text-white font-bold mt-2">
                     EMERGÊNCIA
                   </p>
                 </button>
@@ -130,36 +133,14 @@ export default function Maria() {
             </div>
           </div>
 
-          <div className="flex justify-center space-x-4 mt-20">
-            <a
-              href="https://www.instagram.com/servicesecurity/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image src={Instagram} alt="Instagram" width={35} height={35} />
-            </a>
-            <a
-              href="https://servicesecurity.com.br/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image src={Site} alt="Site" width={35} height={35} className="ml-4" />
-            </a>
-            <a
-              href="https://www.facebook.com/ServiceTecnologiaLtda/?locale=pt_BR"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image src={Facebook} alt="Facebook" width={35} height={35} className="ml-4" />
-            </a>
-          </div>
+          
           <div className="">
             <MenuMaria path={undefined} />
           </div>
           <dialog ref={dialogRef} className='sm:w-1/4 w-1/5 rounded-lg border-2 border-black'>
             <div className='flex justify-end'>
               <button onClick={() => closeModal(dialogRef)} className='m-5'>Fechar</button>
-
+             
             </div>
           </dialog >
           

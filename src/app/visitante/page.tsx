@@ -29,11 +29,13 @@ const Visitante = () => {
     reset,
   } = useForm();
 
-  const onSubmit: SubmitHandler<FormProps> = (data) => {
+  const onSubmit: SubmitHandler<FormProps> = async (data) => {
     console.log(data);
-    setUser(data, session?.user.id);
+    await setUser(data, session?.user.id);
     reset();
+    closeModal(dialogRef); // Fechar a caixa de diálogo após o envio do formulário
   };
+  
 
   return (
     <>
