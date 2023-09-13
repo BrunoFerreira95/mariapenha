@@ -48,7 +48,7 @@ const Visitante = () => {
             O aplicativo permite que mulheres que tenham medida protetiva
             concedida pela Justiça acionem o apoio da Guarda Civil Municipal de
             Ourinhos em casos de risco à integridade física ou à própria vida.
-            
+
             Se esse é seu primeiro acesso, clique em cadastro e informe seus
             dados. Lembramos que você deve ter uma conta Google para utilizar o
             aplicativo. Após realizar o cadastro, aguarde enquanto confirmamos
@@ -58,14 +58,19 @@ const Visitante = () => {
             onClick={() => showModal(dialogRef)}
             className="bg-slate-400 px-5 py-2 rounded-lg mt-2"
           >
-            Informar seus Dados
+            Informe seus dados
           </button>
-          
+
           <p className="mt-4 text-lg text-gray-700">
             Atenciosamente,
             <br />
             Equipe Service Security
           </p>
+          <div className='flex justify-center mt-10'>
+            <form method="post">
+              <button className='bg-red-300 border-2 h-12 w-40 sm:h-16 rounded-md' formAction={"/auth/logout"}>Sair</button>
+            </form>
+          </div>
         </div>
 
         <dialog
@@ -84,7 +89,7 @@ const Visitante = () => {
               type="text"
               {...register("nome")}
             />
-            <label htmlFor="tel">telefone:</label>
+            <label htmlFor="tel">Telefone:</label>
             <InputMask
               mask="99-999999999"
               className="border-2 border-black rounded-lg"
