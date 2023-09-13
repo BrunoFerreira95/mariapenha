@@ -157,7 +157,7 @@ export default function AlertaGuarda() {
                               className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200"
                             >
                               <span className="text-black font-bold text-sm">
-                                Ver Local
+                                Localização
                               </span>
                             </button>
 
