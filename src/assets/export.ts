@@ -14,8 +14,8 @@ import Simbolo from '@assets/simbolo.png'
 import Sirene from '@assets/sirene.svg'
 import Site from '@assets/Site.svg'
 import Support from '@assets/support.svg'
-import TopFundoCelular from '@assets/topFundoCelular.svg'
+import TopFundoCelular from '@assets/topfundocelular.svg'
 import Voltar from '@assets/voltar.svg'
-import Wtt from '@assets/wtt.svg'
+import Wtt from '@assets/Wtt.svg'
 
 export { Contatos, EscudoIncon, Facebook, GeoLocalizacao, GoogleIcon, Home, InsigniaGCM, Instagram, Logo2, Nao, Original, Page404Maria, Simbolo, Sirene, Site, Support, TopFundoCelular, Voltar, Wtt}
