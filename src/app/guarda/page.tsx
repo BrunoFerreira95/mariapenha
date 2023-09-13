@@ -74,6 +74,11 @@ export default function AlertaGuarda() {
     setDialogOpen(false);
     setDeleteConfirmationOpen(false);
   };
+  
+  const closeDialog2 = () => {
+    setDialogOpenEndereco(false);
+    setDeleteConfirmationOpen(false);
+  };
 
   async function deleteAlert(alertId) {
     try {
@@ -175,13 +180,14 @@ export default function AlertaGuarda() {
                             </button>
                             {dialogOpenEndereco && (
                               <>
-                                <dialog>
-
+                              <div className="fixed inset-0 flex items-center justify-center z-50">
+                              <div className="absolute inset-0 bg-black opacity-50"></div>
+                                <div className="bg-white p-4 flex flex-col w-1/4 rounded-lg shadow-lg z-10">
                                   <label htmlFor="nome">Nome completo:</label>
                                   <input
                                     className="border-2 border-black rounded-lg"
                                     type="text"
-                                    defaultValue={alertData?.full_name}
+                                    defaultValue={alertData?.nome}
 
                                   />
                                   <label htmlFor="telefone">Telefone:</label>
@@ -198,7 +204,14 @@ export default function AlertaGuarda() {
                                   <input type="text" defaultValue={alertData?.bairro} className="border-2 border-black rounded-lg" />
                                   <label htmlFor="cidade">Cidade:</label>
                                   <input type="text" defaultValue={alertData?.cidade} className="border-2 border-black rounded-lg" />
-                                </dialog>
+                                  <button
+                                    onClick={closeDialog2}
+                                    className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
+                                  >
+                                    Fechar
+                                  </button>
+                                  </div>
+                                  </div>
                               </>
                             )}
 
