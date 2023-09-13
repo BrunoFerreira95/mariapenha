@@ -28,12 +28,16 @@ const Contatos = () => {
                   <td>190</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">GCM</td>
+                  <td className="pr-4">GCM 1</td>
                   <td>153</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">Violência Doméstica</td>
-                  <td>180</td>
+                  <td className="pr-4">GCM 2</td>
+                  <td>(14) 3335-9320</td>
+                </tr>
+                <tr>
+                  <td className="pr-4">Delegacia da Mulher</td>
+                  <td>(14) 3322-5343</td>
                 </tr>
               </tbody>
             </table>

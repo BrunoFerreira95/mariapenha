@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Menumaria from "../../../components/Menumaria";
 import Header from "@/components/Header";
+import Logo from '@/components/logo'; 
 
 const Contatos = () => {
   const [name, setName] = useState("");
@@ -30,15 +31,18 @@ const Contatos = () => {
         address: "Praça Mello Peixoto, s/n - Centro, Ourinhos - SP, 19900-030",
       },
       {
-        name: "GCM 3",
+        name: "SEDE GCM",
         address: "R. Silva Jardim, 164 - Vila Emilia, Ourinhos - SP, 19900-191",
       },
       {
-        name: "Delegacia da Mulher Ourinhos",
-        address:
-          "R. Aristídes Lau Sampaio, 159 - Jardim Paulista, Ourinhos - SP, 19907-090",
+        name: "DELEGACIA DA MULHER",
+        address: "R. Aristídes Lau Sampaio, 159 - Jardim Paulista, Ourinhos - SP, 19907-090",
       },
-      // ... mais pontos de policiamento
+      {
+        name: "POLICIA MILITAR",
+        address: "Av. Domingos Perino, 1055 - Vila Perino, Ourinhos - SP, 19911-781",
+      },
+      
     ];
 
     setPolicePoints(mockPolicePoints);
@@ -80,9 +84,10 @@ const Contatos = () => {
   };
 
   return (
-    <div className="w-screen sm:flex justify-center bg-gradient-to-b from-purple-500 to-pink-200">
+    <div className="w-screen sm:flex justify-center bg-gradient-to-b bg-purple-200">
       <div className="min-h-screen max-h-fit max-w-xl 0 py-2 flex flex-col">
         <Header />
+        <Logo />
 
         <div>
           <form
@@ -99,19 +104,20 @@ const Contatos = () => {
                   <td>190</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">GCM</td>
+                  <td className="pr-4">GCM 1</td>
                   <td>153</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">VIOLÊNCIA DOMÉSTICA</td>
-                  <td>180</td>
+                  <td className="pr-4">GCM 2</td>
+                  <td>(14) 3335-9320</td>
                 </tr>
                 <tr>
-                  <td className="pr-4">DELEGACIA DA MULHER</td>
-                  <td style={{ whiteSpace: "nowrap" }}>100</td>
+                  <td className="pr-4">Delegacia da Mulher</td>
+                  <td>(14) 3322-5343</td>
                 </tr>
               </tbody>
             </table>
+
 
             {/* Adicione o botão "Visualizar Pontos de Policiamento" e configure o link */}
             <div className="flex justify-center mt-4">
