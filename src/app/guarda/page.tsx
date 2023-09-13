@@ -30,9 +30,14 @@ type AlertProps = {
 
 export default function AlertaGuarda() {
   const [alerts, setAlerts] = useState<AlertProps | null>([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [alertData, setAlertData] = useState()
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
 
+  const openDialog = (alert) => {
+    setAlertData(alert)
+    setDialogOpen(true);
+  };
   useEffect(() => {
     supabase
       .channel('channel-alertamariadapenha')
@@ -58,10 +63,6 @@ export default function AlertaGuarda() {
 
   const handleGoBack = () => {
     history.back();
-  };
-
-  const openDialog = () => {
-    setDialogOpen(true);
   };
 
   const closeDialog = () => {
@@ -152,11 +153,11 @@ export default function AlertaGuarda() {
                         <td className="p-2 text-center font-medium border-b border-black">
                           <a target="_blank" rel="noopener noreferrer">
                             <button
-                              onClick={openDialog}
+                              onClick={(e) => openDialog(alert)}
                               className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200"
                             >
                               <span className="text-black font-bold text-sm">
-                                Ver Local
+                                Localização
                               </span>
                             </button>
 
@@ -164,7 +165,7 @@ export default function AlertaGuarda() {
                               <div className="fixed inset-0 flex items-center justify-center z-50">
                                 <div className="absolute inset-0 bg-black opacity-50"></div>
                                 <div className="bg-white p-4  w-1/2 rounded-lg shadow-lg z-10">
-                                  <Mapa data={alert} />
+                                  <Mapa data={alertData} />
                                   <button
                                     onClick={closeDialog}
                                     className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"

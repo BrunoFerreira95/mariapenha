@@ -21,7 +21,7 @@ const page404 = () => {
           <div className="flex justify-center mt-10">
             <Link href="/">
             <button className="border-2 rounded-lg bg-violet-400 border-violet-700">
-              <span className="text-white m-5">Voltar ao inicio</span>
+              <span className="text-white m-5">Voltar</span>
             </button>
             </Link>
           </div>
