@@ -58,7 +58,7 @@ function Menumaria({ path }) {
               <span
                 className="whitespace-nowrap font-Poppins"
               >
-                Botão Emergência
+                Botão de Emergência
               </span>
             </button>
           </Link>
@@ -93,7 +93,7 @@ function Menumaria({ path }) {
             </button>
           </Link>
 
-          <Link href={`/usuario/edite-dados`} passHref>
+          <Link href={`/usuario/editar`} passHref>
             <button className="w-full h-8 my-2 flex items-start justify-start menu-button ml-2">
             <Image
                 src={Edite}
@@ -101,7 +101,7 @@ function Menumaria({ path }) {
                 className="h-6 w-6 mr-2 flex-shrink-0"
               />
               <span className="whitespace-nowrap font-Poppins">
-                Edite seus dados
+                Edite seus Dados
               </span>
             </button>
           </Link>
