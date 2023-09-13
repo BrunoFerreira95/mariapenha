@@ -1,18 +1,24 @@
 'use client'
 import Topoonda from '@/components/Header'
 import ButtonVoltar from '@/components/voltar'
-import { fetchCidadesData } from '@/controler/admin/cidades/cidades.controler'
-import { fetchEscolasData, fetchEscolasDataWhereCity } from '@/controler/admin/escolas/escolas.controler'
 import { alterClaims } from '@/controler/admin/users/claims/claims.controler'
 import { fetchOneUser, fetchUserClaims } from '@/controler/admin/users/users.controler'
+import { setUser } from '@/controler/users/user.controler'
 import { supabase } from '@/lib/supabaseClient'
 import { useSearchParams } from 'next/navigation'
 import React, { ChangeEvent, useEffect, useState } from 'react'
+import { useForm, SubmitHandler } from "react-hook-form";
+import InputMask from "react-input-mask";
 
 type UserProps = {
   email: string;
   id: string;
-  full_name: string
+  full_name: string;
+  telefone: string;
+  rua: string;
+  bairro: string;
+  cidade: string;
+  numero: string;
 }
 
 type ClaimProps = {
@@ -34,7 +40,15 @@ const Usuario = () => {
   const searchParams = useSearchParams()
   const id = searchParams.get('id')
 
-  const [user, setUser] = useState<UserProps>()
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm<UserProps>();
+
+  const [user2, setUser2] = useState<UserProps>()
   const [claim, setClaim] = useState<ClaimProps>()
   const [handleClaim, setHandleClaim] = useState()
 
@@ -42,11 +56,15 @@ const Usuario = () => {
     alterClaims(id, handleClaim)
   }
 
+  const onSubmit: SubmitHandler = (data) => {
+    setUser(data, user2?.id);
+    reset();
+  };
+
   useEffect(() => {
     if (id) {
-      fetchOneUser(id, setUser)
+      fetchOneUser(id, setUser2)
       fetchUserClaims(id, setClaim)
-
     }
   }, [id])
   
@@ -60,7 +78,7 @@ const Usuario = () => {
           <div className="flex justify-center flex-col mt-5">
 
             <label htmlFor="email" className="text-black font-bold">Email:</label>
-            <span>{user?.email}</span>
+            <span>{user2?.email}</span>
 
             <label htmlFor="Setor" className="text-black font-bold">
               Permisão de usuario:
@@ -89,6 +107,39 @@ const Usuario = () => {
               Editar permissão
             </button>
           </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-5">
+            <label htmlFor="nome">Nome completo:</label>
+            <input
+              className="border-2 border-black rounded-lg"
+              type="text"
+              defaultValue={user2?.full_name}
+              {...register("full_name")}
+            />
+            <label htmlFor="telefone">Telefone:</label>
+            <InputMask
+              mask="99-999999999"
+              className="border-2 border-black rounded-lg"
+              type="text"
+              defaultValue={user2?.telefone}
+              {...register("telefone")}
+            />
+            <label htmlFor="rua">Rua:</label>
+            <input type="text" defaultValue={user2?.rua} className="border-2 border-black rounded-lg" {...register("rua")}/>
+            <label htmlFor="numero">Numero:</label>
+            <input type="text" defaultValue={user2?.numero} className="border-2 border-black rounded-lg" {...register("numero")}/>
+            <label htmlFor="bairro">Bairro:</label>
+            <input type="text" defaultValue={user2?.bairro} className="border-2 border-black rounded-lg" {...register("bairro")}/>
+            <label htmlFor="cidade">Cidade:</label>
+            <input type="text" defaultValue={user2?.cidade} className="border-2 border-black rounded-lg" {...register("cidade")}/>
+            <div className="flex justify-center">
+              <button
+                className="p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white"
+                type="submit"
+              >
+                Salvar
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </>

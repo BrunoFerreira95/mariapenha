@@ -1,6 +1,8 @@
+import { env } from "process";
+
 export async function fetchUserClaims(setUser) {
   try {
-    const response = await fetch(`http://localhost:3000/api/user`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/user`);
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -15,17 +17,20 @@ export async function fetchUserClaims(setUser) {
 
 export async function setUser(data, id) {
   try {
-    const { nome, tel } = data; // Desestruturação dos parâmetros
+    const { telefone, full_name, rua, bairro, cidade, numero } = data; // Desestruturação dos parâmetros
 
-    const apiUrl = 'http://localhost:3000/api/users'; // URL da sua API
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/users`; // URL da sua API
 
     // Define os dados a serem enviados no corpo da solicitação POST
     const postData = {
-      nome: nome,
-      tel: tel,
-      id
-    };
-
+      id,
+      full_name,
+      telefone,
+      rua,
+      bairro,
+      cidade,
+      numero,
+    }
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {

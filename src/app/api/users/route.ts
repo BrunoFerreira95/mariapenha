@@ -10,20 +10,18 @@ export async function POST(request: NextRequest) {
       const requestBody = await request.json();
   
       // Extraia os campos desejados do corpo da solicitação
-      const { id, nome, tel } = requestBody;
-  
-      console.log('id', id);
-      console.log('name', nome);
-      console.log('tel', tel);
+      const { telefone, full_name, rua, bairro, cidade, numero, id } = requestBody;
   
       // Realize as operações desejadas com os dados
       try {
         const { data, error } = await supabase
         .from('profiles')
-        .update({ full_name: nome, telefone: tel })
+        .update({ full_name, telefone, rua, bairro, cidade, numero })
         .eq('id', id)
         .select()
         
+        console.log(data)
+        console.log(error)
       } catch (error) {
         
       }

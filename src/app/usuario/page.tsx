@@ -45,11 +45,16 @@ export default function Maria() {
           telefone: profiles[0].telefone,
           data: dataFormatada,
           latitude,
-          longitude,
+          longitude,         
+          rua: profiles[0].rua,
+          bairro: profiles[0].bairro,
+          cidade: profiles[0].cidade,
+          numero: profiles[0].numero,
         },
       ])
       .select()
     console.log(erro2)
+    console.log(result)
 
   }
   

@@ -1,9 +1,10 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
+import { env } from "process";
 
 export async function fetchOneUser(id: string, setUsers) {
     try {
-        const response = await fetch(`https://mariapenha.vercel.app/api/admin/users?id=${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/admin/users?id=${id}`);
         
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -22,7 +23,7 @@ export async function fetchOneUser(id: string, setUsers) {
 }
 
 export async function fetchUserData(setUsers) {
-    const dynamicData = await fetch("https://mariapenha.vercel.app/api/admin/users");
+    const dynamicData = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/admin/users`);
     return await dynamicData.json().then((item) => {
       setUsers(item);
     });
@@ -31,7 +32,7 @@ export async function fetchUserData(setUsers) {
 
   export async function fetchUserClaims(id: string, setUser) {
     try {
-        const response = await fetch(`https://mariapenha.vercel.app/api/admin/users/claims?id=${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/admin/users/claims?id=${id}`);
         
         if (!response.ok) {
             throw new Error('Network response was not ok');

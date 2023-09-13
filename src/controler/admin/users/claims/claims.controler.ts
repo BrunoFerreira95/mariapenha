@@ -1,6 +1,8 @@
+import { env } from "process";
+
 export async function alterClaims(id, handleClaim) {
   const dynamicData = await fetch(
-    `http://localhost:3000/api/admin/users/claims?id=${id}&handleClaim=${handleClaim}`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/admin/users/claims?id=${id}&handleClaim=${handleClaim}`,
     { method: "POST" }
   );
 }

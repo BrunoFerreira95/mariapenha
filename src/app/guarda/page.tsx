@@ -32,11 +32,16 @@ export default function AlertaGuarda() {
   const [alerts, setAlerts] = useState<AlertProps | null>([]);
   const [alertData, setAlertData] = useState()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogOpenEndereco, setDialogOpenEndereco] = useState(false)
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
 
   const openDialog = (alert) => {
     setAlertData(alert)
     setDialogOpen(true);
+  };
+  const openDialogEndereco = (alert) => {
+    setAlertData(alert)
+    setDialogOpenEndereco(true);
   };
   useEffect(() => {
     supabase
@@ -160,6 +165,42 @@ export default function AlertaGuarda() {
                                 Localização
                               </span>
                             </button>
+                            <button
+                              onClick={(e) => openDialogEndereco(alert)}
+                              className="bg-slate-300 ml-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                            >
+                              <span className="text-black font-bold text-sm">
+                                Endereço
+                              </span>
+                            </button>
+                            {dialogOpenEndereco && (
+                              <>
+                                <dialog>
+
+                                  <label htmlFor="nome">Nome completo:</label>
+                                  <input
+                                    className="border-2 border-black rounded-lg"
+                                    type="text"
+                                    defaultValue={alertData?.full_name}
+
+                                  />
+                                  <label htmlFor="telefone">Telefone:</label>
+                                  <input
+                                    className="border-2 border-black rounded-lg"
+                                    type="text"
+                                    defaultValue={alertData?.telefone}
+                                  />
+                                  <label htmlFor="rua">Rua:</label>
+                                  <input type="text" defaultValue={alertData?.rua} className="border-2 border-black rounded-lg" />
+                                  <label htmlFor="numero">Numero:</label>
+                                  <input type="text" defaultValue={alertData?.numero} className="border-2 border-black rounded-lg" />
+                                  <label htmlFor="bairro">Bairro:</label>
+                                  <input type="text" defaultValue={alertData?.bairro} className="border-2 border-black rounded-lg" />
+                                  <label htmlFor="cidade">Cidade:</label>
+                                  <input type="text" defaultValue={alertData?.cidade} className="border-2 border-black rounded-lg" />
+                                </dialog>
+                              </>
+                            )}
 
                             {dialogOpen && (
                               <div className="fixed inset-0 flex items-center justify-center z-50">
