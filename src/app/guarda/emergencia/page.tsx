@@ -76,12 +76,12 @@ export default function AlertaGuarda() {
   };
 
   const handleConfirmation = async () => {
-    
+
     const { data, error } = await supabase
-    .from('alertaGuarda')
-    .update({ status: 'confimado' })
-    .eq('id', vitima?.id)
-    .select()
+      .from('alertaGuarda')
+      .update({ status: 'confimado' })
+      .eq('id', vitima?.id)
+      .select()
 
     console.log(data);
     console.log(error);
@@ -112,7 +112,7 @@ export default function AlertaGuarda() {
         <div className="grid items-center grid-cols-3">
           <div>
           </div>
-          <ButtonVoltar/>
+          <ButtonVoltar />
           <div className="flex justify-center">
             <Image
               className="sm:h-52 h-28 w-28 sm:w-52 mb-16"
@@ -190,7 +190,7 @@ export default function AlertaGuarda() {
                               <>
                                 <div className="fixed inset-0 flex items-center justify-center z-50">
                                   <div className="absolute inset-0 bg-black opacity-50"></div>
-                                  <div className="bg-white p-4 flex flex-col w-1/4 rounded-lg shadow-lg z-10">
+                                  <div className="bg-white p-4 flex flex-col sm:w-1/4 md:w-2/4 lg:w-1/4 rounded-lg shadow-lg z-10">
                                     <label htmlFor="nome">Nome completo:</label>
                                     <input
                                       className="border-2 border-black rounded-lg"
