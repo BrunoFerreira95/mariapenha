@@ -8,7 +8,7 @@ import AdminHome from './admin/page'
 import HomeUsuario from './usuario/page'
 import { initSession } from '@/controler/admin/users/users.controler'
 import Maria from './usuario/page'
-import AlertaGuarda from './guarda/page'
+import AlertaGuarda from './guarda/emergencia/page'
 import Visitante from './visitante/page'
 
 

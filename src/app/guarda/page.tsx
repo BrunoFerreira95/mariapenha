@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { ButtonHTMLAttributes, DetailedHTMLProps, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
@@ -10,93 +10,13 @@ import { format } from 'date-fns';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import Sound from '@public/panico.mp3'
 
 import { Logo2, InsigniaGCM } from '@assets/export'
+import Link from 'next/link';
 
 
-const Mapa = dynamic(() => import('../../components/Mapa'), { ssr: false });
-
-type AlertProps = {
-  cpf: string;
-  create_at: string;
-  data: string;
-  id: string;
-  latitude: string;
-  longitude: string;
-  nome: string;
-  telefone: string;
-}[];
 
 export default function AlertaGuarda() {
-  const [alerts, setAlerts] = useState<AlertProps | null>([]);
-  const [alertData, setAlertData] = useState()
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [dialogOpenEndereco, setDialogOpenEndereco] = useState(false)
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-
-  const openDialog = (alert) => {
-    setAlertData(alert)
-    setDialogOpen(true);
-  };
-  const openDialogEndereco = (alert) => {
-    setAlertData(alert)
-    setDialogOpenEndereco(true);
-  };
-  useEffect(() => {
-    supabase
-      .channel('channel-alertamariadapenha')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'alertaGuarda' },
-        (payload) => {
-          fetchAllAlertMaria(setAlerts);
-          playSound();
-        }
-      )
-      .subscribe();
-  }, []);
-
-  useEffect(() => {
-    fetchAllAlertMaria(setAlerts);
-  }, []);
-
-  const playSound = () => {
-    const audio = new Audio('/panico.mp3');
-    audio.play();
-  };
-
-  const handleGoBack = () => {
-    history.back();
-  };
-
-  const closeDialog = () => {
-    setDialogOpen(false);
-    setDeleteConfirmationOpen(false);
-  };
-  
-  const closeDialog2 = () => {
-    setDialogOpenEndereco(false);
-    setDeleteConfirmationOpen(false);
-  };
-
-  async function deleteAlert(alertId) {
-    try {
-      const response = await supabase
-        .from('alertaGuarda')
-        .delete()
-        .eq('id', alertId);
-
-      if (response.error) {
-        throw new Error(response.error.message);
-      }
-
-      fetchAllAlertMaria(setAlerts);
-      closeDialog();
-    } catch (error) {
-      console.error('Erro ao excluir alerta:', error);
-    }
-  }
 
   return (
     <>
@@ -121,160 +41,10 @@ export default function AlertaGuarda() {
           </div>
         </div>
         <div className="p-4">
-          <div className="overflow-x-auto">
-            <table className="w-full bg-yellow-300">
-              <caption className="bg-corgcm text-white font-bold py-2 rounded-t-lg text-center">
-                Lista de Ocorrências
-              </caption>
-              <thead>
-                <tr>
-                  <th className="font-bold text-black p-2 border-b border-black">
-                    Nome
-                  </th>
-                  <th className="font-bold text-black p-2 border-b border-black">
-                    Telefone
-                  </th>
-                  <th className="font-bold text-black p-2 border-b border-black">
-                    Data
-                  </th>
-                  <th className="font-bold text-black p-2 border-b border-black">
-                    Ações
-                  </th>
-                  <th className="font-bold text-black p-2 border-b border-black"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <>
-                  {alerts
-                    ? alerts.map((alert) => (
-                      <tr key={alert.id} className="bg-corgcmtabela">
-                        <td className="p-2 text-center font-medium text-white border-b border-black">
-                          {alert.nome}
-                        </td>
-                        <td className="p-2 text-center font-medium text-white border-b border-black">
-                          {alert.telefone}
-                        </td>
-                        <td className="p-2 text-center font-medium text-white border-b border-black">
-                          {format(
-                            new Date(alert.data),
-                            'dd/MM/yyyy HH:mm:ss'
-                          )}
-                        </td>
-                        <td className="p-2 text-center font-medium border-b border-black">
-                          <a target="_blank" rel="noopener noreferrer">
-                            <button
-                              onClick={(e) => openDialog(alert)}
-                              className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200"
-                            >
-                              <span className="text-black font-bold text-sm">
-                                Localização
-                              </span>
-                            </button>
-                            <button
-                              onClick={(e) => openDialogEndereco(alert)}
-                              className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
-                            >
-                              <span className="text-black font-bold text-sm">
-                                Endereço
-                              </span>
-                            </button>
-                            {dialogOpenEndereco && (
-                              <>
-                              <div className="fixed inset-0 flex items-center justify-center z-50">
-                              <div className="absolute inset-0 bg-black opacity-50"></div>
-                                <div className="bg-white p-4 flex flex-col w-1/4 rounded-lg shadow-lg z-10">
-                                  <label htmlFor="nome">Nome completo:</label>
-                                  <input
-                                    className="border-2 border-black rounded-lg"
-                                    type="text"
-                                    defaultValue={alertData?.nome}
-
-                                  />
-                                  <label htmlFor="telefone">Telefone:</label>
-                                  <input
-                                    className="border-2 border-black rounded-lg"
-                                    type="text"
-                                    defaultValue={alertData?.telefone}
-                                  />
-                                  <label htmlFor="rua">Rua:</label>
-                                  <input type="text" defaultValue={alertData?.rua} className="border-2 border-black rounded-lg" />
-                                  <label htmlFor="numero">Numero:</label>
-                                  <input type="text" defaultValue={alertData?.numero} className="border-2 border-black rounded-lg" />
-                                  <label htmlFor="bairro">Bairro:</label>
-                                  <input type="text" defaultValue={alertData?.bairro} className="border-2 border-black rounded-lg" />
-                                  <label htmlFor="cidade">Cidade:</label>
-                                  <input type="text" defaultValue={alertData?.cidade} className="border-2 border-black rounded-lg" />
-                                  <button
-                                    onClick={closeDialog2}
-                                    className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
-                                  >
-                                    Fechar
-                                  </button>
-                                  </div>
-                                  </div>
-                              </>
-                            )}
-
-                            {dialogOpen && (
-                              <div className="fixed inset-0 flex items-center justify-center z-50">
-                                <div className="absolute inset-0 bg-black opacity-50"></div>
-                                <div className="bg-white p-4  w-1/2 rounded-lg shadow-lg z-10">
-                                  <Mapa data={alertData} />
-                                  <button
-                                    onClick={closeDialog}
-                                    className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
-                                  >
-                                    Fechar
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </a>
-                        </td>
-
-                        <td className="p-2 text-center font-medium border-b border-black">
-                          <a target="_blank" rel="noopener noreferrer">
-                            <button
-                              onClick={() => setDeleteConfirmationOpen(true)}
-                              className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200"
-                            >
-                              <span className="text-black font-bold text-sm">
-                                Excluir
-                              </span>
-                            </button>
-                            {deleteConfirmationOpen && (
-                              <div className="fixed inset-0 flex items-center justify-center z-50">
-                                <div className="absolute inset-0 bg-black opacity-50"></div>
-                                <div className="bg-white p-4 w-1/2 rounded-lg shadow-lg z-10">
-                                  <p className="mb-4">
-                                    Deseja realmente excluir?
-                                  </p>
-                                  <button
-                                    onClick={() => {
-                                      deleteAlert(alert.id);
-                                      closeDialog(); // Fechar o diálogo após a exclusão
-                                    }}
-                                    className="bg-red-500 hover:bg-red-400 px-3 py-1 rounded-md mr-2"
-                                  >
-                                    Sim
-                                  </button>
-                                  <button
-                                    onClick={closeDialog}
-                                    className="bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
-                                  >
-                                    Cancelar
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </a>
-                        </td>
-                      </tr>
-                    ))
-                    : null}
-                </>
-              </tbody>
-            </table>
+          <div className="overflow-x-auto flex justify-center">
+            <Link className='bg-purple-500 p-5 rounded-lg text-white' href={'/guarda/emergencia'}>
+              Alertas
+            </Link>
           </div>
         </div>
       </div>
