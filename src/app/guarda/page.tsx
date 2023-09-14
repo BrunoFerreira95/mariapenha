@@ -46,6 +46,11 @@ export default function AlertaGuarda() {
               Alertas
             </Link>
           </div>
+          <div className='flex justify-center mt-40'>
+          <form method="post">
+            <button className='bg-red-300 border-2 h-12 w-40 sm:h-16 rounded-md' formAction={"/auth/logout"}>Sair</button>
+          </form>
+        </div>
         </div>
       </div>
     </>

@@ -12,6 +12,7 @@ import 'leaflet/dist/leaflet.css';
 
 
 import { Logo2, InsigniaGCM } from '@assets/export'
+import ButtonVoltar from '@/components/voltar';
 
 
 const Mapa = dynamic(() => import('../../../components/Mapa'), { ssr: false });
@@ -111,7 +112,7 @@ export default function AlertaGuarda() {
         <div className="grid items-center grid-cols-3">
           <div>
           </div>
-
+          <ButtonVoltar/>
           <div className="flex justify-center">
             <Image
               className="sm:h-52 h-28 w-28 sm:w-52 mb-16"

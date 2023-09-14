@@ -12,7 +12,7 @@ const ButtonVoltar = () => {
   return (
   <div className="z-10 absolute top-0 left-0 ml-2 mt-4">
     <button onClick={handleGoBack}>
-      <Image className="" src={Voltar} alt="" />
+      <Image className="w-10" src={Voltar} alt="" />
     </button>
   </div>
 
