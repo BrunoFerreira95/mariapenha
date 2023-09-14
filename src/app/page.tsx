@@ -10,6 +10,7 @@ import { initSession } from '@/controler/admin/users/users.controler'
 import Maria from './usuario/page'
 import AlertaGuarda from './guarda/emergencia/page'
 import Visitante from './visitante/page'
+import GuardaHome from './guarda/page'
 
 
 
@@ -37,7 +38,7 @@ function checkUserSession(session: AuthSession) {
 
   switch (usuario) {
     case 'guarda':
-        return <AlertaGuarda/>
+        return <GuardaHome/>
       break;
     case 'maria':
         return <Maria/>
