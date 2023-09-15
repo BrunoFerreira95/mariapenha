@@ -21,11 +21,7 @@ const Contatos = () => {
     // Simulando a busca de pontos de policiamento próximos.
     // Neste exemplo, usamos um array de objetos.
     const mockPolicePoints = [
-      {
-        name: "GCM 1 ",
-        address:
-          "Praça dos Burgueses, s/n - Jardim Paulista, Ourinhos - SP, 19907-120",
-      },
+      
       {
         name: "GCM 2",
         address: "Praça Mello Peixoto, s/n - Centro, Ourinhos - SP, 19900-030",
@@ -85,54 +81,55 @@ const Contatos = () => {
   };
 
   return (
-    <div className="w-screen sm:flex justify-center bg-gradient-to-b bg-purple-200">
-      <div className="min-h-screen max-h-fit max-w-xl 0 py-2 flex flex-col">
+    <div className="w-screen sm:flex justify-center bg-gradient-to-b from-purple-200 to-purple-300">
+      <div className="min-h-screen max-h-fit max-w-xl p-2 flex flex-col">
         <Header />
-        
 
-        <div>
-          <form
-            onSubmit={handleSubmit}
-            className="mx-4 bg-white p-5 rounded-xl mt-20"
-          >
+        <div className="mt-4">
+         
             <div className="flex justify-center">
               {/* Conteúdo do formulário */}
             </div>
-            <table className="table-auto mx-auto mt-4">
-              <tbody>
-                <tr>
-                  <td className="pr-4">PM</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td className="pr-4">GCM 1</td>
-                  <td>153</td>
-                </tr>
-                <tr>
-                  <td className="pr-4">GCM 2</td>
-                  <td>(14) 3335-9320</td>
-                </tr>
-                <tr>
-                  <td className="pr-4">Delegacia da Mulher</td>
-                  <td>(14) 3322-5343</td>
-                </tr>
-              </tbody>
-            </table>
-
+            <div>
+              <table className="table-auto flex justify-center">
+                <thead>
+                  {/* Cabeçalho da tabela */}
+                  
+                </thead>
+                <tbody>
+                  {/* Linhas da tabela com cores neutras */}
+                  <tr className="bg-gray-100">
+                    <td className="px-2 py-2 whitespace-nowrap">PM</td>
+                    <td className="px-2 py-2 whitespace-nowrap">190</td>
+                  </tr>
+                  <tr className="bg-gray-200">
+                    <td className="px-2 py-2 whitespace-nowrap">GCM 1</td>
+                    <td className="px-2 py-2 whitespace-nowrap">153</td>
+                  </tr>
+                  <tr className="bg-gray-100">
+                    <td className="px-2 py-2 whitespace-nowrap">GCM 2</td>
+                    <td className="px-2 py-2 whitespace-nowrap">(14) 3335-9320</td>
+                  </tr>
+                  <tr className="bg-gray-200">
+                    <td className="px-2 py-2 whitespace-nowrap">Delegacia da Mulher</td>
+                    <td className="px-2 py-2 whitespace-nowrap">(14) 3322-5343</td>
+                  </tr>
+                  {/* Adicione mais linhas da tabela conforme necessário */}
+                </tbody>
+              </table>
+            </div>
 
             {/* Adicione o botão "Visualizar Pontos de Policiamento" e configure o link */}
             <div className="flex justify-center mt-4">
               <button
                 type="button"
                 onClick={handleViewPolicePoints}
-                className="px-6 py-2 bg-purple-500 text-white rounded-md mt-10"
+                className="px-2 py-2 bg-purple-500 text-white rounded-md mt-4"
               >
                 Visualizar Pontos de Policiamento
               </button>
             </div>
-
-           
-          </form>
+          
         </div>
       </div>
 
