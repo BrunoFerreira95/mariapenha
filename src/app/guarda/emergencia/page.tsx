@@ -148,6 +148,7 @@ export default function AlertaGuarda() {
                           )}
                         </td>
                         <td className="p-2 text-center font-medium border-b border-black">
+                            <span>{alert.precisao}m</span>
                           <a target="_blank" rel="noopener noreferrer">
                             <button
                               onClick={(e) => openDialog(alert)}

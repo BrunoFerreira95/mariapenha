@@ -43,7 +43,7 @@ export default function Maria() {
     initSession(setSession)
   }, [])
 
-  async function createANewAlert(dataFormatada, latitude, longitude) {
+  async function createANewAlert(dataFormatada, latitude, longitude, local, precisao) {
 
 
     let { data: profiles, error } = await supabase
@@ -51,7 +51,7 @@ export default function Maria() {
       .select('*')
       .eq('id', session?.user?.id)
     console.log(profiles[0].full_name)
-
+    console.log('vaiiii',precisao)
     const { data: result, error: erro2 } = await supabase
       .from('alertaGuarda')
       .insert([
@@ -65,12 +65,11 @@ export default function Maria() {
           bairro: profiles[0].bairro,
           cidade: profiles[0].cidade,
           numero: profiles[0].numero,
-          idUser: profiles[0].id
+          idUser: profiles[0].id,
+          precisao,
         },
       ])
       .select()
-    console.log(erro2)
-    console.log(result)
 
   }
 
@@ -87,6 +86,7 @@ export default function Maria() {
           try {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
+            const precisao = position.coords.accuracy; // Obtém a precisão em metros
             const dataAtual = new Date().toLocaleString("pt-BR", {
               timeZone: "UTC",
             });
@@ -94,18 +94,24 @@ export default function Maria() {
               /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/,
               "$3-$2-$1 $4:$5:$6"
             );
-
+        
             const ponto = {
               lat: latitude,
               lng: longitude,
             };
+        
             let local;
-
-            createANewAlert(dataFormatada, latitude, longitude, local)
+        
+            // Agora você pode usar 'precisao' em sua função ou armazená-la para referência futura
+            console.log(`vai ${precisao} metros`);
+            if(precisao)
+                  
+            createANewAlert(dataFormatada, latitude, longitude, local, precisao);
           } catch (error) {
             console.error("Erro no processamento da localização:", error);
           }
         });
+        
       } else {
         console.error("Geolocalização não suportada neste navegador.");
       }
