@@ -147,13 +147,17 @@ export default function AlertaGuarda() {
                             'dd/MM/yyyy HH:mm:ss'
                           )}
                         </td>
+                        
                         <td className="p-2 text-center font-medium border-b border-black">
-                            <span>{alert.precisao}m</span>
+                        
+                            <span className='bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105'>{alert.precisao}m</span>
                           <a target="_blank" rel="noopener noreferrer">
+                            
                             <button
                               onClick={(e) => openDialog(alert)}
-                              className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                              className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-7"
                             >
+                            
                               <span className="text-black font-bold text-sm">
                                 Localização
                               </span>
