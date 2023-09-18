@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const notify = () => toast.success('A guarda recebeu seu sinal', {
   position: "top-center",
-  autoClose: 5000,
+  autoClose: 15000,
   hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,
