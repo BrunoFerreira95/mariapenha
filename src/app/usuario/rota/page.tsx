@@ -23,7 +23,7 @@ const Contatos = () => {
     const mockPolicePoints = [
       
       {
-        name: "GCM 2",
+        name: "GCM",
         address: "Praça Mello Peixoto, s/n - Centro, Ourinhos - SP, 19900-030",
       },
       {
@@ -36,10 +36,16 @@ const Contatos = () => {
           "R. Aristídes Lau Sampaio, 159 - Jardim Paulista, Ourinhos - SP, 19907-090",
       },
       {
-        name: "POLICIA MILITAR",
+        name: "POLÍCIA MILITAR",
         address:
-          "Av. Domingos Perino, 1055 - Vila Perino, Ourinhos - SP, 19911-781",
-      }
+        "Av. Domingos Perino, 1055 - Vila Perino, Ourinhos - SP, 19911-781",
+      },
+      {
+        name: "GCM 2",
+        address: "R. Pedro Marques de Leão, 484-654 - Jardim Paulista, Ourinhos - SP, 19907-010",
+      },
+      
+      
     ];
 
     setPolicePoints(mockPolicePoints);
