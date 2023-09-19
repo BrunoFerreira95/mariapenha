@@ -8,6 +8,9 @@ import Header from "@/components/Header";
 import Logo from '@/components/logo'; 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import dynamic from "next/dynamic";
+
+const Mapa = dynamic(() => import("../../../components/Map"), { ssr: false });
 
 const Contatos = () => {
   const [name, setName] = useState("");
@@ -88,17 +91,7 @@ const Contatos = () => {
 
           {showPolicePoints && (
             <div className="mt-4">
-              <MapContainer center={[-22.977983, -49.873451]} zoom={13} style={{ height: "400px" }}>
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {policePoints.map((point, index) => (
-                  <Marker key={index} position={[point.lat, point.lng]}>
-                    <Popup>{point.name}</Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
+              <Mapa/>
             </div>
           )}
         </div>
