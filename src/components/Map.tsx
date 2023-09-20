@@ -10,11 +10,11 @@ type positionprops={
 }[]
 
 const policeLocations: positionprops =  [
-    { id:1, name: "GCM", lat: -22.97794717549575, lng: -49.86824625696814 },
-    { id:2,name: "SEDE GCM", lat: -22.985907706493986, lng: -49.86897232165561 },
-    { id:3,name: "DELEGACIA DA MULHER", lat: -22.97966733718405, lng: -49.87410952060253 },
-    { id:4,name: "POLÍCIA MILITAR", lat: -22.965902372024612, lng: -49.865990865022596 },
-    { id:5,name: "GCM 2", lat: -22.97890047462074, lng: -49.87858783409708 },
+    { id:1, name: "GCM - Praça Mello Peixoto", lat: -22.97794717549575, lng: -49.86824625696814 },
+    { id:2,name: "SEDE GCM - R. Silva Jardim, 164 - Vila Emilia", lat: -22.985907706493986, lng: -49.86897232165561 },
+    { id:3,name: "DELEGACIA DA MULHER - R. Aristídes Lau Sampaio, 159 - Jardim Paulista", lat: -22.97966733718405, lng: -49.87410952060253 },
+    { id:4,name: "POLÍCIA MILITAR - Av. Domingos Perino, 1055 - Vila Perino", lat: -22.965902372024612, lng: -49.865990865022596 },
+    { id:5,name: "GCM - Praça dos Burgueses - Jardim Paulista", lat: -22.97890047462074, lng: -49.87858783409708 },
   ];
 
 
