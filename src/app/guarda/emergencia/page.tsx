@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -38,25 +38,6 @@ export default function AlertaGuarda() {
     setDialogOpenEndereco(true);
   };
 
-  supabase
-    .channel("channel-alertamariadapenha")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "alertaGuarda" },
-      (payload) => {
-        fetchAllAlertMaria(setAlerts);
-        setOpenConfimation(true);
-        setVitima(payload.new);
-        const audio = new Audio("/panico.mp3");
-        audio.play();
-      }
-    )
-    .subscribe();
-
-  useEffect(() => {
-    fetchAllAlertMaria(setAlerts);
-  }, []);
-
   const closeDialog = () => {
     setDialogOpen(false);
   };
@@ -85,6 +66,20 @@ export default function AlertaGuarda() {
       .select();
     fetchAllAlertMaria(setAlerts);
   };
+
+  // Função para ordenar as alertas por data e hora
+  const sortAlertsByDateTime = (alerts) => {
+    return alerts.sort((a, b) => {
+      const dateA = new Date(a.data);
+      const dateB = new Date(b.data);
+      return dateB - dateA;
+    });
+  };
+
+  useEffect(() => {
+    fetchAllAlertMaria(setAlerts);
+  }, []);
+
   return (
     <>
       <div className="bg-white max-h-fit min-h-screen">
@@ -132,7 +127,7 @@ export default function AlertaGuarda() {
               <tbody>
                 <>
                   {alerts
-                    ? alerts.map((alert) => (
+                    ? sortAlertsByDateTime(alerts).map((alert) => (
                         <tr key={alert.id} className={`${alert.cor}`}>
                           <td className="p-2  text-center font-medium text-white border-b border-black">
                             {alert.nome}
@@ -280,6 +275,8 @@ export default function AlertaGuarda() {
     </>
   );
 }
+
+// Restante do código
 
 async function fetchAllAlertMaria(setAlerts) {
   let { data: alertaGuarda, error } = await supabase
