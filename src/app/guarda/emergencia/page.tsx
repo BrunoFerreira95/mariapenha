@@ -37,24 +37,26 @@ export default function AlertaGuarda() {
     setAlertData(alert);
     setDialogOpenEndereco(true);
   };
-  supabase
-  .channel("channel-alertamariadapenha")
-  .on(
-    "postgres_changes",
-    { event: "INSERT", schema: "public", table: "alertaGuarda" },
-    (payload) => {
-      fetchAllAlertMaria(setAlerts);
-      setOpenConfimation(true);
-      setVitima(payload.new);
-      const audio = new Audio("/panico.mp3");
-      audio.play();
-    }
-  )
-  .subscribe();
 
-useEffect(() => {
-  fetchAllAlertMaria(setAlerts);
-}, []);
+  supabase
+    .channel("channel-alertamariadapenha")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "alertaGuarda" },
+      (payload) => {
+        fetchAllAlertMaria(setAlerts);
+        setOpenConfimation(true);
+        setVitima(payload.new);
+        const audio = new Audio("/panico.mp3");
+        audio.play();
+      }
+    )
+    .subscribe();
+
+  useEffect(() => {
+    fetchAllAlertMaria(setAlerts);
+  }, []);
+
   const closeDialog = () => {
     setDialogOpen(false);
   };
@@ -83,16 +85,6 @@ useEffect(() => {
       .select();
     fetchAllAlertMaria(setAlerts);
   };
-
-  // Função para ordenar as alertas por data e hora
-  const sortAlertsByDateTime = (alerts) => {
-    return alerts.sort((a, b) => {
-      const dateA = new Date(a.data);
-      const dateB = new Date(b.data);
-      return dateB - dateA;
-    });
-  };
-
   return (
     <>
       <div className="bg-white max-h-fit min-h-screen">
