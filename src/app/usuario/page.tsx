@@ -82,35 +82,45 @@ export default function Maria() {
   async function handleSendAlert() {
     try {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          try {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            const precisao = position.coords.accuracy; // Obtém a precisão em metros
-            const dataAtual = new Date().toLocaleString("pt-BR", {
-              timeZone: "UTC",
-            });
-            const dataFormatada = dataAtual.replace(
-              /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/,
-              "$3-$2-$1 $4:$5:$6"
-            );
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+              const precisao = position.coords.accuracy; // Obtém a precisão em metros
+              const dataAtual = new Date().toLocaleString("pt-BR", {
+                timeZone: "UTC",
+              });
+              const dataFormatada = dataAtual.replace(
+                /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/,
+                "$3-$2-$1 $4:$5:$6"
+              );
         
-            const ponto = {
-              lat: latitude,
-              lng: longitude,
-            };
+              const ponto = {
+                lat: latitude,
+                lng: longitude,
+              };
         
-            let local;
+              let local;
         
-            // Agora você pode usar 'precisao' em sua função ou armazená-la para referência futura
-            console.log(`vai ${precisao} metros`);
-            if(precisao)
-                  
-            createANewAlert(dataFormatada, latitude, longitude, local, precisao);
-          } catch (error) {
-            console.error("Erro no processamento da localização:", error);
+              // Agora você pode usar 'precisao' em sua função ou armazená-la para referência futura
+              console.log(`vai ${precisao} metros`);
+              if (precisao) {
+                createANewAlert(dataFormatada, latitude, longitude, local, precisao);
+              }
+            } catch (error) {
+              console.error("Erro no processamento da localização:", error);
+            }
+          },
+          (error) => {
+            // Tratamento de erros aqui
+            console.error("Erro na solicitação de localização:", error);
+          },
+          {
+            enableHighAccuracy: true, // Solicita alta precisão
           }
-        });
+        );
+        
         
       } else {
         console.error("Geolocalização não suportada neste navegador.");
