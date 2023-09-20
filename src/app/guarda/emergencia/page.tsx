@@ -85,6 +85,14 @@ export default function AlertaGuarda() {
       .select();
     fetchAllAlertMaria(setAlerts);
   };
+
+  const sortAlertsByDateTime = (alerts) => {
+    return alerts.sort((a, b) => {
+      const dateA = new Date(a.data);
+      const dateB = new Date(b.data);
+      return dateB - dateA;
+    });
+  };
   return (
     <>
       <div className="bg-white max-h-fit min-h-screen">
