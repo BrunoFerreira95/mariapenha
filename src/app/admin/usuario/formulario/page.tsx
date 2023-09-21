@@ -73,67 +73,69 @@ const Usuario = () => {
       <div className="max-h-fit min-h-screen">
         <Topoonda />
         <ButtonVoltar/>
-        <div className="flex justify-center items-center m-16 flex-col">
+        <div className="flex justify-center items-center flex-col">
 
-          <div className="flex justify-center flex-col mt-5">
+          <div className="flex justify-center flex-col">
 
             <label htmlFor="email" className="text-black font-bold">Email:</label>
             <span>{user2?.email}</span>
+            <div className='border border-black w-64'></div>
 
             <label htmlFor="Setor" className="text-black font-bold">
               Permisão de usuario:
             </label>
+            
             <span
-              className="bg-white text-black flex justify-center items-center h-11 w-64 mb-1 rounded-lg mt-2 border-2
-                                    border-black">
+              className="bg-white text-black flex justify-center items-center h-8 w-64">
               {claim?.usuario}
             </span>
+            <div className='border border-black w-64'></div>
             <label htmlFor="cidade" className="text-black font-bold">
               Alterar cidade do usuario:
             </label>
 
             <select
-              className="bg-white  text-black h-11 w-64 rounded-lg  border-2
-                border-black"
+              className="bg-white  text-black p-1 w-64 rounded-lg"
               onChange={(e) => setHandleClaim(e.target.value)}
               name="cidade">
               <option value="">Escolha um opção</option>
               <option value='maria'>Maria da Penha</option>
               <option value='guarda'>Guarda</option>
             </select>
+            <div className='border border-black w-64'></div>
             <button
               onClick={hanldeAlterClaims}
               className="w-64 h-8 mt-2 bg-blue-500 text-white rounded-md">
               Editar permissão
             </button>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-5">
-            <label htmlFor="nome">Nome completo:</label>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col mt-1">
+            <label className="text-black font-bold" htmlFor="nome">Nome completo:</label>
             <input
-              className="border-2 border-black rounded-lg"
+            className='border border-black rounded-md p-1'
               type="text"
               defaultValue={user2?.full_name}
               {...register("full_name")}
             />
-            <label htmlFor="telefone">Telefone:</label>
+            <label className="text-black font-bold mt-1" htmlFor="telefone">Telefone:</label>
             <InputMask
+            className='border border-black rounded-md p-1'
               mask="99-999999999"
-              className="border-2 border-black rounded-lg"
               type="text"
               defaultValue={user2?.telefone}
               {...register("telefone")}
             />
-            <label htmlFor="rua">Rua:</label>
-            <input type="text" defaultValue={user2?.rua} className="border-2 border-black rounded-lg" {...register("rua")}/>
-            <label htmlFor="numero">Numero:</label>
-            <input type="text" defaultValue={user2?.numero} className="border-2 border-black rounded-lg" {...register("numero")}/>
-            <label htmlFor="bairro">Bairro:</label>
-            <input type="text" defaultValue={user2?.bairro} className="border-2 border-black rounded-lg" {...register("bairro")}/>
-            <label htmlFor="cidade">Cidade:</label>
-            <input type="text" defaultValue={user2?.cidade} className="border-2 border-black rounded-lg" {...register("cidade")}/>
+            <label className="text-black font-bold mt-1" htmlFor="rua">Rua:</label>
+            <input className='border border-black rounded-md p-1 w-64' type="text" defaultValue={user2?.rua} {...register("rua")}/>
+            <label className="text-black font-bold mt-1" htmlFor="numero">Numero:</label>
+            <input className='border border-black rounded-md p-1 w-64' type="text" defaultValue={user2?.numero}  {...register("numero")}/>
+            <label className="text-black font-bold mt-1" htmlFor="bairro">Bairro:</label>
+            <input className='border border-black rounded-md p-1 w-64' type="text" defaultValue={user2?.bairro}  {...register("bairro")}/>
+            <label className="text-black font-bold mt-1" htmlFor="cidade">Cidade:</label>
+            <input className='border border-black rounded-md p-1 w-64' type="text" defaultValue={user2?.cidade}  {...register("cidade")}/>
             <div className="flex justify-center">
               <button
-                className="p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white"
+                className="p-2 bg-blue-500 w-1/4 rounded-lg m-5 text-white"
                 type="submit"
               >
                 Salvar
