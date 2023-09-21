@@ -1,3 +1,4 @@
+'use client'
 export const firebaseConfig = {
     apiKey: process.env.APIKEY,
     authDomain: process.env.AUTHDOMAIN,
