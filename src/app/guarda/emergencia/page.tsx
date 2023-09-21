@@ -267,21 +267,16 @@ export default function AlertaGuarda() {
                               )}
                             </a>
                           </td>
-                          <td className="p-2 text-center font-medium border-b border-black">
-                            {alert.status === "Resolvido" ? (
-                              <span className="bg-slate-300 text-black px-2 py-1 rounded-full font-bold text-sm">
-                                Resolvido
+                          <td className={`p-2 text-center font-medium border-b border-black`}>
+                            <button
+                              onClick={() => handleResolve(alert)}
+                              className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                            >
+                              <span className="text-black font-bold text-sm">
+                                {alert.cor === 'bg-green-500' ? 'Resolvido' : 'Resolver'}
                               </span>
-                            ) : (
-                              <button
-                                onClick={() => handleResolve(alert)}
-                                className="bg-slate-300 text-black px-2 py-1 rounded-full font-bold text-sm"
-                              >
-                                <span className="text-black font-bold text-sm">
-                                  Resolver
-                                </span>
-                              </button>
-                            )}
+                            </button>
+                             
                           </td>
                         </tr>
                       ))
