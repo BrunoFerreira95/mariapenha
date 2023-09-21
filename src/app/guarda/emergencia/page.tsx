@@ -38,16 +38,16 @@ export default function AlertaGuarda() {
     setDialogOpenEndereco(true);
   };
 
-  const audio = new Audio("/panico.mp3");
   supabase
-    .channel("channel-alertamariadapenha")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "alertaGuarda" },
-      (payload) => {
-        fetchAllAlertMaria(setAlerts);
-        setOpenConfimation(true);
-        setVitima(payload.new);
+  .channel("channel-alertamariadapenha")
+  .on(
+    "postgres_changes",
+    { event: "INSERT", schema: "public", table: "alertaGuarda" },
+    (payload) => {
+      fetchAllAlertMaria(setAlerts);
+      setOpenConfimation(true);
+      setVitima(payload.new);
+      const audio = new Audio("/panico.mp3");
         audio.play();
       }
     )
