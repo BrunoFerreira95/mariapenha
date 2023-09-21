@@ -20,6 +20,7 @@ type AlertProps = {
   longitude: string;
   nome: string;
   telefone: string;
+  status: string;
 }[];
 
 export default function AlertaGuarda() {
@@ -167,7 +168,7 @@ export default function AlertaGuarda() {
   const handleResolve = async (alert) => {
     const { data, error } = await supabase
       .from("alertaGuarda")
-      .update({ cor: "bg-green-500" })
+      .update({ cor: "bg-green-500", status: "Resolvido" }) // Atualize a cor e o status
       .eq("id", alert.id)
       .select();
     fetchAllAlertMaria(setAlerts);
@@ -361,7 +362,7 @@ export default function AlertaGuarda() {
                               )}
                             </a>
                           </td>
-                          <td>
+                          <td className={`p-2 text-center font-medium border-b border-black`}>
                             <button
                               onClick={() => handleResolve(alert)}
                               className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
@@ -370,6 +371,7 @@ export default function AlertaGuarda() {
                                 {alert.cor === 'bg-green-500' ? 'Resolvido' : 'Resolver'}
                               </span>
                             </button>
+                             
                           </td>
                         </tr>
                       ))

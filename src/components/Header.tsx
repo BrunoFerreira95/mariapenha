@@ -14,7 +14,7 @@ const Header = () => {
         <div className="relative">
           <svg
             className="absolute"
-            viewBox="0 0 1440 180"
+            viewBox="0 0 1440 90"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="none"
           >
