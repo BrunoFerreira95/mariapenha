@@ -210,6 +210,12 @@ export default function AlertaGuarda() {
                 defaultValue={inputCallValue}
 
               />
+              <audio
+                className="h-20 w-96 bg-black"
+                ref={voiceSound}
+                autoPlay
+                hidden
+                controls></audio>
         <div className="p-4">
           <div className="overflow-x-auto">
             <table className="w-full bg-yellow-300">
