@@ -1,23 +1,22 @@
 'use client'
 import React, { useEffect, useState, useRef, RefObject } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+
 
 import 'react-toastify/dist/ReactToastify.css'
 
 import MenuMaria from '../../components/Menumaria'
 import { supabase } from '../../lib/supabaseClient'
-import { useSession } from '@supabase/auth-helpers-react'
 import { initSession } from '@/controler/admin/users/users.controler'
 import { AuthSession } from '@supabase/supabase-js'
 
 import { Logo2, Sirene, Site, Facebook, Instagram } from '@assets/export'
-import dynamic from 'next/dynamic'
-import { MyTimer } from '@/components/MyTimer'
 import Header from '@/components/Header'
-import Logo from '@/components/logo';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Button } from '@/components/ui/button'
+import { ConnectFirebase } from '@/lib/firebase'
+import { collection, getDoc } from 'firebase/firestore'
 
 const notify = () => toast.success('A guarda recebeu seu sinal', {
   position: "top-center",
@@ -28,15 +27,135 @@ const notify = () => toast.success('A guarda recebeu seu sinal', {
   draggable: true,
   progress: undefined,
   theme: "light",
-  });
+});
 
 export default function Maria() {
   const [session, setSession] = useState<AuthSession | null>(null)
   const [dialogSwitch, setDialogSwitch] = useState(false)
+  const { firestore, pc } = ConnectFirebase()
+  let localStream = null
+  let remoteStream = null
+  const voiceSound = useRef(null)
+  const remoteVideo = useRef<HTMLVideoElement>(null)
+  const callInput = useRef<HTMLInputElement>({ current: null })
+  const [inputCallValue, setInputCallValue] = useState('')
 
   const dialogRef: RefObject<HTMLDialogElement> = useRef(null)
   const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null)
+  // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
+  // // VOICE CALL ---------------------------------------------------------------------------------
+  const voiceClick = async () => {
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: false,
+      audio: true
+    })
+    remoteStream = new MediaStream()
 
+    // Push tracks from local stream to peer connection
+    localStream.getTracks().forEach((track) => {
+      pc.addTrack(track, localStream)
+    })
+
+    // Pull tracks from remote stream, add to video stream
+    pc.ontrack = (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        remoteStream.addTrack(track)
+      })
+    }
+    const videoElementRemote = voiceSound.current
+    videoElementRemote.srcObject = remoteStream
+
+  }
+
+  // 2. Create an offer
+  const VoiceCallSound = async () => {
+    // Reference Firestore collections for signaling
+    const callDoc = firestore.collection('call').doc()
+    const offerCandidates = callDoc.collection('offerCandidates')
+    const answerCandidates = callDoc.collection('answerCandidates')
+
+    callInput.current.value = callDoc.id
+    setInputCallValue(callInput.current?.value)
+    const { data, error } = await supabase
+      .from('codigoComunicacao')
+      .insert([{ codigo: callInput.current?.value }])
+    // Get candidates for caller, save to db
+    pc.onicecandidate = (event) => {
+      event.candidate && offerCandidates.add(event.candidate.toJSON())
+    }
+
+    // Create offer
+    const offerDescription = await pc.createOffer()
+    await pc.setLocalDescription(offerDescription)
+
+    const offer = {
+      sdp: offerDescription.sdp,
+      type: offerDescription.type
+    }
+
+    await callDoc.set({ offer })
+
+    // Listen for remote answer
+    callDoc.onSnapshot((snapshot) => {
+      const data = snapshot.data()
+      if (!pc.currentRemoteDescription && data?.answer) {
+        const answerDescription = new RTCSessionDescription(data.answer)
+        pc.setRemoteDescription(answerDescription)
+      }
+    })
+
+    // When answered, add candidate to peer connection
+    answerCandidates.onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          const candidate = new RTCIceCandidate(change.doc.data())
+          pc.addIceCandidate(candidate)
+        }
+      })
+    })
+
+  }
+
+
+  // 3. Answer the call with the unique ID
+  const voiceReceiverCall = async () => {
+    const callId = callInput.current.value
+    const callDoc = firestore.collection('voice').doc(callId)
+    const answerCandidates = callDoc.collection('answerCandidates')
+    const offerCandidates = callDoc.collection('offerCandidates')
+
+    pc.onicecandidate = (event) => {
+      event.candidate && answerCandidates.add(event.candidate.toJSON())
+    }
+
+    const callData = (await callDoc.get()).data()
+
+    if (callData) {
+
+      const offerDescription = callData.offer
+      await pc.setRemoteDescription(new RTCSessionDescription(offerDescription))
+
+      const answerDescription = await pc.createAnswer()
+      await pc.setLocalDescription(answerDescription)
+
+      const answer = {
+        type: answerDescription.type,
+        sdp: answerDescription.sdp
+      }
+
+      await callDoc.update({ answer })
+
+      offerCandidates.onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          console.log(change)
+          if (change.type === 'added') {
+            let data = change.doc.data()
+            pc.addIceCandidate(new RTCIceCandidate(data))
+          }
+        })
+      })
+    }
+  }
 
 
   useEffect(() => {
@@ -93,14 +212,14 @@ export default function Maria() {
                 /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/,
                 "$3-$2-$1 $4:$5:$6"
               );
-        
+
               const ponto = {
                 lat: latitude,
                 lng: longitude,
               };
-        
+
               let local;
-        
+
               // Agora você pode usar 'precisao' em sua função ou armazená-la para referência futura
               if (precisao) {
                 createANewAlert(dataFormatada, latitude, longitude, local, precisao);
@@ -118,8 +237,8 @@ export default function Maria() {
             enableHighAccuracy: true, // Solicita alta precisão
           }
         );
-        
-        
+
+
       } else {
         console.error("Geolocalização não suportada neste navegador.");
       }
@@ -188,6 +307,27 @@ export default function Maria() {
               <span>
                 Aguarde à guarda está sendo contatada!
               </span>
+              <Button onClick={voiceClick}>AQUI</Button>
+              <Button onClick={VoiceCallSound}>Criar oferta</Button>
+              <video
+                controls
+                className="w-4/5 h-96  "
+                ref={remoteVideo}
+                autoPlay
+                hidden
+                playsInline></video>
+              <audio
+                className="h-20 w-96 bg-black"
+                ref={voiceSound}
+                autoPlay
+                hidden
+                controls></audio>
+              <input
+                ref={callInput}
+                className="bg-white h-8 font-semibold rounded-md mb-2 "
+                value={inputCallValue}
+
+              />
             </div>
           </dialog >
           <ToastContainer />
