@@ -1,11 +1,13 @@
-"use client";
-import React, { useState, useEffect } from "react";
+"use client"
+import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { supabase } from "@/lib/supabaseClient";
 import { format } from "date-fns";
 import { Logo2, InsigniaGCM } from "@assets/export";
 import ButtonVoltar from "@/components/voltar";
+import { ConnectFirebase } from "@/lib/firebase";
+import { Button } from "@/components/ui/button";
 
 const Mapa = dynamic(() => import("../../../components/Mapa"), { ssr: false });
 
@@ -28,6 +30,92 @@ export default function AlertaGuarda() {
   const [dialogOpenEndereco, setDialogOpenEndereco] = useState(false);
   const [openConfimation, setOpenConfimation] = useState(false);
   const [vitima, setVitima] = useState({});
+  const { firestore, pc } = ConnectFirebase()
+  let localStream = null
+  let remoteStream = null
+  const voiceSound = useRef(null)
+  const remoteVideo = useRef<HTMLVideoElement>(null)
+  const callInput = useRef<HTMLInputElement>({ current: null })
+  const [inputCallValue, setInputCallValue] = useState('')
+
+  supabase
+      .channel('custom-insert-channel2')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
+        (payload) => {
+          setInputCallValue(payload.new.codigo)
+
+        }
+      )
+      .subscribe()
+
+      // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
+  // // VOICE CALL ---------------------------------------------------------------------------------
+  const voiceClick = async () => {
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: false,
+      audio: true
+    })
+    remoteStream = new MediaStream()
+
+    // Push tracks from local stream to peer connection
+    localStream.getTracks().forEach((track) => {
+      pc.addTrack(track, localStream)
+    })
+
+    // Pull tracks from remote stream, add to video stream
+    pc.ontrack = (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        remoteStream.addTrack(track)
+      })
+    }
+    const videoElementRemote = voiceSound.current
+    videoElementRemote.srcObject = remoteStream
+
+  }
+
+  // 3. Answer the call with the unique ID
+  const voiceReceiverCall = async () => {
+    const callId = callInput.current.value
+    console.log(callId)
+    const callDoc = firestore.collection('call').doc(callId)
+    const answerCandidates = callDoc.collection('answerCandidates')
+    const offerCandidates = callDoc.collection('offerCandidates')
+
+    pc.onicecandidate = (event) => {
+      event.candidate && answerCandidates.add(event.candidate.toJSON())
+    }
+
+    const callData = (await callDoc.get()).data()
+
+    if (callData) {
+
+      const offerDescription = callData.offer
+      await pc.setRemoteDescription(new RTCSessionDescription(offerDescription))
+
+      const answerDescription = await pc.createAnswer()
+      await pc.setLocalDescription(answerDescription)
+
+      const answer = {
+        type: answerDescription.type,
+        sdp: answerDescription.sdp
+      }
+
+      await callDoc.update({ answer })
+
+      offerCandidates.onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          console.log(change)
+          if (change.type === 'added') {
+            let data = change.doc.data()
+            pc.addIceCandidate(new RTCIceCandidate(data))
+          }
+        })
+      })
+    }
+  }
+
 
   const openDialog = (alert) => {
     setAlertData(alert);
@@ -115,6 +203,14 @@ export default function AlertaGuarda() {
             />
           </div>
         </div>
+        <Button onClick={voiceClick}>INICIAR</Button>
+        <Button onClick={voiceReceiverCall}>Teste</Button>
+        <input
+                ref={callInput}
+                className="bg-white h-8 font-semibold rounded-md mb-2 "
+                defaultValue={inputCallValue}
+
+              />
         <div className="p-4">
           <div className="overflow-x-auto">
             <table className="w-full bg-yellow-300">
