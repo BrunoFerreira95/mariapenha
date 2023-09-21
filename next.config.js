@@ -9,6 +9,7 @@ const nextConfig = {
     dest: "public",
     register: true,
     shipWaiting: true,
+    sw: 'sw.js'
   }),
   reactStrictMode: true,
   typescript: {

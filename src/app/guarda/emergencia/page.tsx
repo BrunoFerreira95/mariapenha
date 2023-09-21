@@ -40,15 +40,15 @@ export default function AlertaGuarda() {
   };
 
   supabase
-    .channel("channel-alertamariadapenha")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "alertaGuarda" },
-      (payload) => {
-        fetchAllAlertMaria(setAlerts);
-        setOpenConfimation(true);
-        setVitima(payload.new);
-        const audio = new Audio("/panico.mp3");
+  .channel("channel-alertamariadapenha")
+  .on(
+    "postgres_changes",
+    { event: "INSERT", schema: "public", table: "alertaGuarda" },
+    (payload) => {
+      fetchAllAlertMaria(setAlerts);
+      setOpenConfimation(true);
+      setVitima(payload.new);
+      const audio = new Audio("/panico.mp3");
         audio.play();
       }
     )
@@ -141,7 +141,7 @@ export default function AlertaGuarda() {
               <tbody>
                 <>
                   {alerts
-                    ? sortAlertsByDateTime(alerts).map((alert) => (
+                    ? alerts.map((alert) => (
                         <tr key={alert.id} className={`${alert.cor}`}>
                           <td className="p-2  text-center font-medium text-white border-b border-black">
                             {alert.nome}
