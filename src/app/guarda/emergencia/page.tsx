@@ -48,10 +48,11 @@ export default function AlertaGuarda() {
       setOpenConfimation(true);
       setVitima(payload.new);
       const audio = new Audio("/panico.mp3");
-        audio.play();
-      }
+      audio.play();
+    }
     )
     .subscribe();
+    
 
   useEffect(() => {
     fetchAllAlertMaria(setAlerts);
@@ -72,8 +73,6 @@ export default function AlertaGuarda() {
       .eq("id", vitima?.id)
       .select();
 
-    console.log(data);
-    console.log(error);
     setOpenConfimation(false);
   };
 

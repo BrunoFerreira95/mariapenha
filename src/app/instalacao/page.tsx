@@ -22,9 +22,7 @@ function DownloadPWAButton() {
             // Aguarda o usuário responder ao prompt.
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('Usuário aceitou a instalação');
                 } else {
-                    console.log('Usuário recusou a instalação');
                 }
 
                 setDeferredPrompt(null);

@@ -38,10 +38,6 @@ const Contatos = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Nome:", name);
-    console.log("Endereço:", address);
-    console.log("Telefone:", phone);
-    console.log("Mensagem:", message);
 
     setName("");
     setAddress("");
