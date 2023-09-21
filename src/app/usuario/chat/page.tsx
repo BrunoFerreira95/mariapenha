@@ -23,10 +23,6 @@ const Chat = () => {
 
     // Aqui você pode enviar os dados de cadastro e mensagem de denúncia para o servidor ou executar alguma outra ação necessária.
 
-    console.log("Nome:", name);
-    console.log("Endereço:", address);
-    console.log("Telefone:", phone);
-    console.log("Mensagem:", message);
 
     // Limpar os campos após o envio (opcional)
     setName("");

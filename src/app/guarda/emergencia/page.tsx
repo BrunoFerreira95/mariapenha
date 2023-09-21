@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -18,6 +18,7 @@ type AlertProps = {
   longitude: string;
   nome: string;
   telefone: string;
+  status: string;
 }[];
 
 export default function AlertaGuarda() {
@@ -39,19 +40,20 @@ export default function AlertaGuarda() {
   };
 
   supabase
-    .channel("channel-alertamariadapenha")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "alertaGuarda" },
-      (payload) => {
-        fetchAllAlertMaria(setAlerts);
-        setOpenConfimation(true);
-        setVitima(payload.new);
-        const audio = new Audio("/panico.mp3");
-        audio.play();
-      }
+  .channel("channel-alertamariadapenha")
+  .on(
+    "postgres_changes",
+    { event: "INSERT", schema: "public", table: "alertaGuarda" },
+    (payload) => {
+      fetchAllAlertMaria(setAlerts);
+      setOpenConfimation(true);
+      setVitima(payload.new);
+      const audio = new Audio("/panico.mp3");
+      audio.play();
+    }
     )
     .subscribe();
+    
 
   useEffect(() => {
     fetchAllAlertMaria(setAlerts);
@@ -72,15 +74,13 @@ export default function AlertaGuarda() {
       .eq("id", vitima?.id)
       .select();
 
-    console.log(data);
-    console.log(error);
     setOpenConfimation(false);
   };
 
   const handleResolve = async (alert) => {
     const { data, error } = await supabase
       .from("alertaGuarda")
-      .update({ cor: "bg-green-500" })
+      .update({ cor: "bg-green-500", status: "Resolvido" }) // Atualize a cor e o status
       .eq("id", alert.id)
       .select();
     fetchAllAlertMaria(setAlerts);
@@ -140,7 +140,7 @@ export default function AlertaGuarda() {
               <tbody>
                 <>
                   {alerts
-                    ? sortAlertsByDateTime(alerts).map((alert) => (
+                    ? alerts.map((alert) => (
                         <tr key={alert.id} className={`${alert.cor}`}>
                           <td className="p-2  text-center font-medium text-white border-b border-black">
                             {alert.nome}
@@ -266,15 +266,16 @@ export default function AlertaGuarda() {
                               )}
                             </a>
                           </td>
-                          <td>
+                          <td className={`p-2 text-center font-medium border-b border-black`}>
                             <button
                               onClick={() => handleResolve(alert)}
                               className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
                             >
                               <span className="text-black font-bold text-sm">
-                                Resolvido
+                                {alert.cor === 'bg-green-500' ? 'Resolvido' : 'Resolver'}
                               </span>
                             </button>
+                             
                           </td>
                         </tr>
                       ))

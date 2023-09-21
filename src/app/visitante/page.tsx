@@ -30,7 +30,6 @@ const Visitante = () => {
   } = useForm();
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    console.log(data);
     await setUser(data, session?.user.id);
     reset();
     closeModal(dialogRef); // Fechar a caixa de diálogo após o envio do formulário
