@@ -44,8 +44,6 @@ export async function POST(request: NextRequest) {
           .eq('id', id)
           .select();
 
-        console.log(data);
-        console.log(error);
       } catch (error) {
         // Lidar com erros de atualização, se necessário
       }

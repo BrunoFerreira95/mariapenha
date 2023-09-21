@@ -50,8 +50,6 @@ export default function Maria() {
       .from('profiles')
       .select('*')
       .eq('id', session?.user?.id)
-    console.log(profiles[0].full_name)
-    console.log('vaiiii',precisao)
     const { data: result, error: erro2 } = await supabase
       .from('alertaGuarda')
       .insert([
@@ -104,9 +102,9 @@ export default function Maria() {
               let local;
         
               // Agora você pode usar 'precisao' em sua função ou armazená-la para referência futura
-              console.log(`vai ${precisao} metros`);
               if (precisao) {
                 createANewAlert(dataFormatada, latitude, longitude, local, precisao);
+                showModal(dialogRef)
               }
             } catch (error) {
               console.error("Erro no processamento da localização:", error);
@@ -181,10 +179,15 @@ export default function Maria() {
           <div className="">
             <MenuMaria path={undefined} />
           </div>
-          <dialog ref={dialogRef} className='sm:w-1/4 w-1/5 rounded-lg border-2 border-black'>
+          <dialog ref={dialogRef} className='sm:w-1/4 h-40 w-1/5 rounded-lg border-2 border-black'>
             <div className='flex justify-end'>
-              <button onClick={() => closeModal(dialogRef)} className='m-5'>Fechar</button>
+              <button onClick={() => closeModal(dialogRef)} className='m-5 border-2 p-2 rounded-md border-red-400'>Fechar</button>
+            </div>
+            <div className='flex justify-center'>
 
+              <span>
+                Aguarde à guarda está sendo contatada!
+              </span>
             </div>
           </dialog >
           <ToastContainer />
