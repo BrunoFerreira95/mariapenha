@@ -49,11 +49,10 @@ export default function AlertaGuarda() {
       setOpenConfimation(true);
       setVitima(payload.new);
       const audio = new Audio("/panico.mp3");
-      audio.play();
-    }
+        audio.play();
+      }
     )
     .subscribe();
-    
 
   useEffect(() => {
     fetchAllAlertMaria(setAlerts);
@@ -74,6 +73,8 @@ export default function AlertaGuarda() {
       .eq("id", vitima?.id)
       .select();
 
+    console.log(data);
+    console.log(error);
     setOpenConfimation(false);
   };
 
@@ -117,7 +118,7 @@ export default function AlertaGuarda() {
         <div className="p-4">
           <div className="overflow-x-auto">
             <table className="w-full bg-yellow-300">
-              <caption className="bg-corgcm text-white font-bold py-2 rounded-t-lg text-center">
+              <caption className="bg-corgcm text-black font-bold py-2 rounded-t-lg text-center text-2xl">
                 Lista de Ocorrências
               </caption>
               <thead>
@@ -132,7 +133,7 @@ export default function AlertaGuarda() {
                     Data
                   </th>
                   <th className="font-bold text-black p-2 border-b border-black">
-                    Ações
+                    Geolocalização
                   </th>
                   <th className="font-bold text-black p-2 border-b border-black"></th>
                 </tr>
@@ -142,13 +143,13 @@ export default function AlertaGuarda() {
                   {alerts
                     ? alerts.map((alert) => (
                         <tr key={alert.id} className={`${alert.cor}`}>
-                          <td className="p-2  text-center font-medium text-white border-b border-black">
+                          <td className="p-2  text-center font-medium text-black border-b border-black">
                             {alert.nome}
                           </td>
-                          <td className="p-2 text-center font-medium text-white border-b border-black">
+                          <td className="p-2 text-center font-medium text-black border-b border-black">
                             {alert.telefone}
                           </td>
-                          <td className="p-2 text-center font-medium text-white border-b border-black">
+                          <td className="p-2 text-center font-medium text-black border-b border-black">
                             {format(
                               new Date(alert.data),
                               "dd/MM/yyyy HH:mm:ss"
@@ -156,14 +157,14 @@ export default function AlertaGuarda() {
                           </td>
 
                           <td className="p-2 text-center font-medium border-b border-black">
-                            <span className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
+                            <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
                               {Number(alert.precisao).toFixed(1)}m
                             </span>
 
                             <a target="_blank" rel="noopener noreferrer">
                               <button
                                 onClick={(e) => openDialog(alert)}
-                                className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-7"
+                                className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
                               >
                                 <span className="text-black font-bold text-sm">
                                   Localização
@@ -269,10 +270,13 @@ export default function AlertaGuarda() {
                           <td className={`p-2 text-center font-medium border-b border-black`}>
                             <button
                               onClick={() => handleResolve(alert)}
-                              className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                              className={`${
+                                alert.cor === 'bg-green-500' ? 'bg-blue-500' : 'bg-red-500'
+                              } md:ml-2 mt-2 h-10 w-24 rounded-md hover:bg-red-400`}
                             >
-                              <span className="text-black font-bold text-sm">
+                              <span className="text-black font-bold text-xl">
                                 {alert.cor === 'bg-green-500' ? 'Resolvido' : 'Resolver'}
+                                
                               </span>
                             </button>
                              

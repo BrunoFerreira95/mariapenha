@@ -1,57 +1,60 @@
-'use client'
-import React, { useEffect, useState, useRef, RefObject } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+"use client";
+import React, { useEffect, useState, useRef, RefObject } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
-import 'react-toastify/dist/ReactToastify.css'
+import "react-toastify/dist/ReactToastify.css";
 
-import MenuMaria from '../../components/Menumaria'
-import { supabase } from '../../lib/supabaseClient'
-import { useSession } from '@supabase/auth-helpers-react'
-import { initSession } from '@/controler/admin/users/users.controler'
-import { AuthSession } from '@supabase/supabase-js'
+import MenuMaria from "../../components/Menumaria";
+import { supabase } from "../../lib/supabaseClient";
+import { useSession } from "@supabase/auth-helpers-react";
+import { initSession } from "@/controler/admin/users/users.controler";
+import { AuthSession } from "@supabase/supabase-js";
 
-import { Logo2, Sirene, Site, Facebook, Instagram } from '@assets/export'
-import dynamic from 'next/dynamic'
-import { MyTimer } from '@/components/MyTimer'
-import Header from '@/components/Header'
-import Logo from '@/components/logo';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Logo2, Sirene, Site, Facebook, Instagram } from "@assets/export";
+import dynamic from "next/dynamic";
+import { MyTimer } from "@/components/MyTimer";
+import Header from "@/components/Header";
+import Logo from "@/components/logo";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const notify = () => toast.success('A guarda recebeu seu sinal', {
-  position: "top-center",
-  autoClose: 15000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
+const notify = () =>
+  toast.success("A guarda recebeu seu sinal", {
+    position: "top-center",
+    autoClose: 15000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
   });
 
 export default function Maria() {
-  const [session, setSession] = useState<AuthSession | null>(null)
-  const [dialogSwitch, setDialogSwitch] = useState(false)
+  const [session, setSession] = useState<AuthSession | null>(null);
+  const [dialogSwitch, setDialogSwitch] = useState(false);
 
-  const dialogRef: RefObject<HTMLDialogElement> = useRef(null)
-  const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null)
-
-
+  const dialogRef: RefObject<HTMLDialogElement> = useRef(null);
+  const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null);
 
   useEffect(() => {
-    initSession(setSession)
-  }, [])
+    initSession(setSession);
+  }, []);
 
-  async function createANewAlert(dataFormatada, latitude, longitude, local, precisao) {
-
-
+  async function createANewAlert(
+    dataFormatada,
+    latitude,
+    longitude,
+    local,
+    precisao
+  ) {
     let { data: profiles, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', session?.user?.id)
+      .from("profiles")
+      .select("*")
+      .eq("id", session?.user?.id);
     const { data: result, error: erro2 } = await supabase
-      .from('alertaGuarda')
+      .from("alertaGuarda")
       .insert([
         {
           nome: profiles[0].full_name,
@@ -67,14 +70,13 @@ export default function Maria() {
           precisao,
         },
       ])
-      .select()
-
+      .select();
   }
 
   const time = new Date();
   time.setSeconds(time.getSeconds() + 10); // 10 minutes timer
   async function handleEmergencPress() {
-    showModal(dialogRef)
+    showModal(dialogRef);
   }
 
   async function handleSendAlert() {
@@ -93,18 +95,24 @@ export default function Maria() {
                 /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/,
                 "$3-$2-$1 $4:$5:$6"
               );
-        
+
               const ponto = {
                 lat: latitude,
                 lng: longitude,
               };
-        
+
               let local;
-        
+
               // Agora você pode usar 'precisao' em sua função ou armazená-la para referência futura
               if (precisao) {
-                createANewAlert(dataFormatada, latitude, longitude, local, precisao);
-                showModal(dialogRef)
+                createANewAlert(
+                  dataFormatada,
+                  latitude,
+                  longitude,
+                  local,
+                  precisao
+                );
+                showModal(dialogRef);
               }
             } catch (error) {
               console.error("Erro no processamento da localização:", error);
@@ -118,8 +126,6 @@ export default function Maria() {
             enableHighAccuracy: true, // Solicita alta precisão
           }
         );
-        
-        
       } else {
         console.error("Geolocalização não suportada neste navegador.");
       }
@@ -130,30 +136,28 @@ export default function Maria() {
 
   useEffect(() => {
     if (dialogSwitch) {
-      showModal(dialog2Ref)
+      showModal(dialog2Ref);
     }
-  }, [dialogSwitch])
+  }, [dialogSwitch]);
 
-
-  supabase.channel('updating-confimation-user')
+  supabase
+    .channel("updating-confimation-user")
     .on(
-      'postgres_changes',
-      { event: 'UPDATE', schema: 'public', table: 'alertaGuarda' },
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "alertaGuarda" },
       (payload) => {
         if (payload.new.idUser === session?.user.id) {
-          notify()
-
+          notify();
         }
       }
     )
-    .subscribe()
+    .subscribe();
 
   return (
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
         <div className="min-h-screen max-h-fit max-w-xl 0 py-2 sm:flex  sm:flex-col">
           <Header />
-
 
           <div className="flex justify-center">
             <div className="">
@@ -175,33 +179,38 @@ export default function Maria() {
             </div>
           </div>
 
-
           <div className="">
             <MenuMaria path={undefined} />
           </div>
-          <dialog ref={dialogRef} className='sm:w-1/4 h-40 w-1/5 rounded-lg border-2 border-black'>
-            <div className='flex justify-end'>
-              <button onClick={() => closeModal(dialogRef)} className='m-5 border-2 p-2 rounded-md border-red-400'>Fechar</button>
+          <dialog
+            ref={dialogRef}
+            className="sm:w-1/4 md:w-1/3 lg:w-1/4 rounded-lg border-2 border-black"
+            style={{ maxHeight: "80vh" }}
+          >
+            <div className="flex justify-end">
+              <button
+                onClick={() => closeModal(dialogRef)}
+                className="m-3 sm:m-5 border-2 p-2 rounded-md border-red-400"
+              >
+                Fechar
+              </button>
             </div>
-            <div className='flex justify-center'>
+            <div className="flex justify-center p-3">
+              <span>Aguarde, a guarda está sendo contatada!</span>
+            </div>
+          </dialog>
 
-              <span>
-                Aguarde à guarda está sendo contatada!
-              </span>
-            </div>
-          </dialog >
           <ToastContainer />
-        </div >
-      </div >
+        </div>
+      </div>
     </>
   );
 }
 
-
 function showModal(dialogRef: RefObject<HTMLDialogElement>) {
-  dialogRef.current?.showModal()
+  dialogRef.current?.showModal();
 }
 
 function closeModal(dialogRef: RefObject<HTMLDialogElement>) {
-  dialogRef.current?.close()
+  dialogRef.current?.close();
 }
