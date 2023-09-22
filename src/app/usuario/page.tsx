@@ -69,6 +69,7 @@ export default function Maria() {
     const videoElementRemote = voiceSound.current
     videoElementRemote.srcObject = remoteStream
 
+    VoiceCallSound()
   }
 
   // 2. Create an offer
@@ -80,6 +81,7 @@ export default function Maria() {
 
     callInput.current.value = callDoc.id
     setInputCallValue(callInput.current?.value)
+
     const { data, error } = await supabase
       .from('codigoComunicacao')
       .insert([{ codigo: callInput.current?.value }])
@@ -194,6 +196,8 @@ export default function Maria() {
         },
       ])
       .select();
+
+    voiceClick()
   }
 
   const time = new Date();
@@ -271,10 +275,12 @@ export default function Maria() {
       { event: "UPDATE", schema: "public", table: "alertaGuarda" },
       (payload) => {
         if (payload.new.idUser === session?.user.id) {
-          if(payload.new.cor === 'bg-green-500') {
+          if (payload.new.cor === 'bg-green-500') {
             return
           }
           notify();
+
+
         }
       }
     )
@@ -324,36 +330,29 @@ export default function Maria() {
             </div>
             <div className="flex justify-center p-3">
               <span>Aguarde, a guarda está sendo contatada!</span>
-            <div className='flex justify-center'>
-
-              <span>
-                Aguarde à guarda está sendo contatada!
-              </span>
-              <Button onClick={voiceClick}>AQUI</Button>
-              <Button onClick={VoiceCallSound}>Criar oferta</Button>
-              <video
-                controls
-                className="w-4/5 h-96  "
-                ref={remoteVideo}
-                autoPlay
-                hidden
-                playsInline></video>
-              <audio
-                className="h-20 w-96 bg-black"
-                ref={voiceSound}
-                autoPlay
-                hidden
-                controls></audio>
-              <input
-                ref={callInput}
-                className="bg-white h-8 font-semibold rounded-md mb-2 "
-                value={inputCallValue}
-
-              />
-            </div>
+              <div className='flex justify-center'>
+              </div>
             </div>
           </dialog>
+          <video
+            controls
+            className="w-4/5 h-96  "
+            ref={remoteVideo}
+            autoPlay
+            hidden
+            playsInline></video>
+          <audio
+            className="h-20 w-96 bg-black"
+            ref={voiceSound}
+            autoPlay
+            hidden
+            controls></audio>
+          <input
+            ref={callInput}
 
+            className="bg-white h-8 font-semibold rounded-md mb-2 "
+            value={inputCallValue}
+          />
           <ToastContainer />
         </div>
       </div>

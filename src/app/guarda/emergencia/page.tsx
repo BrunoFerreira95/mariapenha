@@ -39,12 +39,13 @@ export default function AlertaGuarda() {
   const [inputCallValue, setInputCallValue] = useState('')
 
   supabase
-      .channel('custom-insert-channel2')
+      .channel('custom-insert-channel22222')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
         (payload) => {
           setInputCallValue(payload.new.codigo)
+          setOpenConfimation(true)
 
         }
       )
@@ -72,7 +73,8 @@ export default function AlertaGuarda() {
     }
     const videoElementRemote = voiceSound.current
     videoElementRemote.srcObject = remoteStream
-
+    
+    voiceReceiverCall()
   }
 
   // 3. Answer the call with the unique ID
@@ -134,7 +136,7 @@ export default function AlertaGuarda() {
     { event: "INSERT", schema: "public", table: "alertaGuarda" },
     (payload) => {
       fetchAllAlertMaria(setAlerts);
-      setOpenConfimation(true);
+      ;
       setVitima(payload.new);
       const audio = new Audio("/panico.mp3");
         audio.play();
@@ -161,9 +163,8 @@ export default function AlertaGuarda() {
       .eq("id", vitima?.id)
       .select();
 
-    console.log(data);
-    console.log(error);
     setOpenConfimation(false);
+    voiceClick()
   };
 
   const handleResolve = async (alert) => {
@@ -204,7 +205,7 @@ export default function AlertaGuarda() {
           </div>
         </div>
         <Button onClick={voiceClick}>INICIAR</Button>
-        <Button onClick={voiceReceiverCall}>Teste</Button>
+
         <input
                 ref={callInput}
                 className="bg-white h-8 font-semibold rounded-md mb-2 "
@@ -351,7 +352,8 @@ export default function AlertaGuarda() {
                                       </div>
                                     </div>
                                   </div>
-                                </>
+                                  
+                               </>
                               )}
                               {dialogOpen && (
                                 <div className="fixed inset-0 flex items-center justify-center z-50">
