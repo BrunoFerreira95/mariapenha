@@ -370,17 +370,17 @@ export default function AlertaGuarda() {
                             </a>
                           </td>
                           <td className={`p-2 text-center font-medium border-b border-black`}>
-                            <button
+                            <Button
                               onClick={() => handleResolve(alert)}
                               className={`${
                                 alert.cor === 'bg-green-500' ? 'bg-blue-500' : 'bg-red-500'
-                              } md:ml-2 mt-2 h-10 w-24 rounded-md hover:bg-red-400`}
+                              }  hover:bg-slate-500`}
                             >
-                              <span className="text-black font-bold text-xl">
+                              <span className="text-black">
                                 {alert.cor === 'bg-green-500' ? 'Resolvido' : 'Resolver'}
                                 
                               </span>
-                            </button>
+                            </Button>
                              
                           </td>
                         </tr>
