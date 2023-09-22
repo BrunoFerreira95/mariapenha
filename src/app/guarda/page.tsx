@@ -57,16 +57,16 @@ export default function GuardaHome() {
           </div>
           <div className="flex justify-center mt-10">
             <form method="post">
+              <button className='bg-red-300 border-2 h-12 w-40 sm:h-16 rounded-md' formAction={"/auth/logout"}>
+                
               <Image
                 src={Fechar}
                 alt="Fechar"
                 className="h-8 w-8"
-                onClick={() => {
-                  
-                  window.location.href = "/auth/logout"; 
-                }}
-              />
+                />
+                </button>
             </form>
+
           </div>
         </div>
       </div>
