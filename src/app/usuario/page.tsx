@@ -271,6 +271,9 @@ export default function Maria() {
       { event: "UPDATE", schema: "public", table: "alertaGuarda" },
       (payload) => {
         if (payload.new.idUser === session?.user.id) {
+          if(payload.new.cor === 'bg-green-500') {
+            return
+          }
           notify();
         }
       }

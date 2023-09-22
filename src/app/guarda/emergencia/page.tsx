@@ -169,7 +169,7 @@ export default function AlertaGuarda() {
   const handleResolve = async (alert) => {
     const { data, error } = await supabase
       .from("alertaGuarda")
-      .update({ cor: "bg-green-500", status: "Resolvido" }) // Atualize a cor e o status
+      .update({ cor: "bg-green-500" }) // Atualize a cor e o status
       .eq("id", alert.id)
       .select();
     fetchAllAlertMaria(setAlerts);
