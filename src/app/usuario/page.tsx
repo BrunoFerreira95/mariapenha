@@ -18,6 +18,8 @@ import Header from "@/components/Header";
 import Logo from "@/components/logo";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ConnectFirebase } from "@/lib/firebase";
+import { Button } from "@/components/ui/button";
 
 const notify = () =>
   toast.success("A guarda recebeu seu sinal", {
