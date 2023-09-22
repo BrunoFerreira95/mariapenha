@@ -69,7 +69,7 @@ export default function Maria() {
     const videoElementRemote = voiceSound.current
     videoElementRemote.srcObject = remoteStream
 
-    VoiceCallSound()
+    voiceReceiverCall()
   }
 
   // 2. Create an offer
@@ -121,12 +121,25 @@ export default function Maria() {
     })
 
   }
-
+  supabase
+  .channel('custom-insert-channel22222')
+  .on(
+    'postgres_changes',
+    { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
+    (payload) => {
+      setInputCallValue(payload.new.codigo)
+      voiceClick()
+    }
+  )
+  .subscribe()
 
   // 3. Answer the call with the unique ID
   const voiceReceiverCall = async () => {
+
+    if(callInput.current.value.length < 0) {}
     const callId = callInput.current.value
-    const callDoc = firestore.collection('voice').doc(callId)
+    console.log('teste',callId)
+    const callDoc = firestore.collection('call').doc(callId)
     const answerCandidates = callDoc.collection('answerCandidates')
     const offerCandidates = callDoc.collection('offerCandidates')
 
@@ -196,8 +209,6 @@ export default function Maria() {
         },
       ])
       .select();
-
-    voiceClick()
   }
 
   const time = new Date();
@@ -279,6 +290,7 @@ export default function Maria() {
             return
           }
           notify();
+          
 
 
         }
@@ -351,7 +363,7 @@ export default function Maria() {
             ref={callInput}
 
             className="bg-white h-8 font-semibold rounded-md mb-2 "
-            value={inputCallValue}
+            defaultValue={inputCallValue}
           />
           <ToastContainer />
         </div>
