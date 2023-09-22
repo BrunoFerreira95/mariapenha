@@ -32,41 +32,6 @@ const notify = () =>
   });
 
 export default function Maria() {
-  const [session, setSession] = useState<AuthSession | null>(null);
-  const [dialogSwitch, setDialogSwitch] = useState(false);
-=======
-'use client'
-import React, { useEffect, useState, useRef, RefObject } from 'react'
-import Image from 'next/image'
-
-
-import 'react-toastify/dist/ReactToastify.css'
-
-import MenuMaria from '../../components/Menumaria'
-import { supabase } from '../../lib/supabaseClient'
-import { initSession } from '@/controler/admin/users/users.controler'
-import { AuthSession } from '@supabase/supabase-js'
-
-import { Logo2, Sirene, Site, Facebook, Instagram } from '@assets/export'
-import Header from '@/components/Header'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Button } from '@/components/ui/button'
-import { ConnectFirebase } from '@/lib/firebase'
-import { collection, getDoc } from 'firebase/firestore'
-
-const notify = () => toast.success('A guarda recebeu seu sinal', {
-  position: "top-center",
-  autoClose: 15000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-});
-
-export default function Maria() {
   const [session, setSession] = useState<AuthSession | null>(null)
   const [dialogSwitch, setDialogSwitch] = useState(false)
   const { firestore, pc } = ConnectFirebase()
@@ -193,10 +158,6 @@ export default function Maria() {
       })
     }
   }
-
-
-  const dialogRef: RefObject<HTMLDialogElement> = useRef(null);
-  const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null);
 
   useEffect(() => {
     initSession(setSession);
@@ -384,6 +345,7 @@ export default function Maria() {
                 value={inputCallValue}
 
               />
+            </div>
             </div>
           </dialog>
 
