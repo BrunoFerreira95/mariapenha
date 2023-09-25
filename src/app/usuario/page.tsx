@@ -2,10 +2,7 @@
 import React, { useEffect, useState, useRef, RefObject } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
 import "react-toastify/dist/ReactToastify.css";
-
-import MenuMaria from "../../components/Menumaria";
 import { supabase } from "../../lib/supabaseClient";
 import { useSession } from "@supabase/auth-helpers-react";
 import { initSession } from "@/controler/admin/users/users.controler";
@@ -20,6 +17,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ConnectFirebase } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+
+const Mapa = dynamic(() => import("../../components/Map"), { ssr: false });
 
 const notify = () =>
   toast.success("A guarda recebeu seu sinal", {
@@ -43,6 +43,22 @@ export default function Maria() {
   const remoteVideo = useRef<HTMLVideoElement>(null)
   const callInput = useRef<HTMLInputElement>({ current: null })
   const [inputCallValue, setInputCallValue] = useState('')
+  const [policePoints, setPolicePoints] = useState([]);
+  const [showPolicePoints, setShowPolicePoints] = useState(false);
+  const handleViewPolicePoints = (e) => {
+    e.preventDefault();
+
+    const policeLocations = [
+      { name: "GCM", lat: -22.97794717549575, lng: -49.86824625696814 },
+      { name: "SEDE GCM", lat: -22.985907706493986, lng: -49.86897232165561 },
+      { name: "DELEGACIA DA MULHER", lat: -22.97966733718405, lng: -49.87410952060253 },
+      { name: "POLÍCIA MILITAR", lat: -22.965902372024612, lng: -49.865990865022596 },
+      { name: "GCM 2", lat: -22.97890047462074, lng: -49.87858783409708 },
+    ];
+
+    setPolicePoints(policeLocations);
+    setShowPolicePoints(true);
+  };
 
   const dialogRef: RefObject<HTMLDialogElement> = useRef(null)
   const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null)
@@ -325,7 +341,7 @@ export default function Maria() {
           </div>
 
           <div className="">
-            <MenuMaria path={undefined} />
+            
           </div>
           <dialog
             ref={dialogRef}
@@ -366,8 +382,47 @@ export default function Maria() {
             defaultValue={inputCallValue}
           />
           <ToastContainer />
+          <div>
+            <table className="table-auto flex justify-center">
+              <thead></thead>
+              <tbody>
+                <tr className="bg-gray-100">
+                  <td className="px-2 py-2 whitespace-nowrap">PM</td>
+                  <td className="px-2 py-2 whitespace-nowrap">190</td>
+                </tr>
+                <tr className="bg-gray-200">
+                  <td className="px-2 py-2 whitespace-nowrap">GCM 1</td>
+                  <td className="px-2 py-2 whitespace-nowrap">153</td>
+                </tr>
+                <tr className="bg-gray-100">
+                  <td className="px-2 py-2 whitespace-nowrap">GCM 2</td>
+                  <td className="px-2 py-2 whitespace-nowrap">(14) 3335-9320</td>
+                </tr>
+                <tr className="bg-gray-200">
+                  <td className="px-2 py-2 whitespace-nowrap">Delegacia da Mulher</td>
+                  <td className="px-2 py-2 whitespace-nowrap">(14) 3322-5343</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center mt-4">
+            <button
+              type="button"
+              onClick={handleViewPolicePoints}
+              className="px-2 py-2 bg-purple-500 text-white rounded-md mt-4"
+            >
+              Visualizar Pontos de Policiamento
+            </button>
+          </div>
+
+          {showPolicePoints && (
+            <div className="mt-4">
+              <Mapa/>
+            </div>
+          )}
         </div>
       </div>
+        
     </>
   );
 }
