@@ -257,13 +257,12 @@ export default function AlertaGuarda() {
             />
           </div>
         </div>
-        <Button onClick={voiceClick}>INICIAR</Button>
 
         <input
                 ref={callInput}
                 className="bg-white h-8 font-semibold rounded-md mb-2 "
                 defaultValue={inputCallValue}
-
+                hidden
               />
               <audio
                 className="h-20 w-96 bg-black"

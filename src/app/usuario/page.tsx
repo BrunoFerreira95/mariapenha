@@ -384,6 +384,7 @@ export default function Maria() {
             ref={callInput}
             className="bg-white h-8 font-semibold rounded-md mb-2 "
             defaultValue={inputCallValue}
+            hidden
           />
           <ToastContainer />
           <div>
