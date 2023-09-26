@@ -315,6 +315,7 @@ export default function Maria() {
             return;
           }
           notify();
+          closeModal(dialogRef)
         }
       }
     )
@@ -353,12 +354,6 @@ export default function Maria() {
             style={{ maxHeight: "80vh" }}
           >
             <div className="flex justify-end">
-              <button
-                onClick={() => closeModal(dialogRef)}
-                className="m-3 sm:m-5 border-2 p-2 rounded-md border-red-400"
-              >
-                Fechar
-              </button>
             </div>
             <div className="flex justify-center p-3">
               <span>A GCM está sendo contatada!</span>
