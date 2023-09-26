@@ -8,6 +8,7 @@ import { Logo2, InsigniaGCM } from "@assets/export";
 import ButtonVoltar from "@/components/voltar";
 import { ConnectFirebase } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const Mapa = dynamic(() => import("../../../components/Mapa"), { ssr: false });
 
@@ -236,6 +237,11 @@ export default function AlertaGuarda() {
       return dateB - dateA;
     });
   };
+  const router = useRouter()
+
+  function resetPage() {
+    router.refresh()
+  }
   return (
     <>
       <div className="bg-white max-h-fit min-h-screen">
@@ -257,7 +263,7 @@ export default function AlertaGuarda() {
             />
           </div>
         </div>
-
+        <Button onClick={resetPage}>  Cancelar chamada</Button>
         <input
                 ref={callInput}
                 className="bg-white h-8 font-semibold rounded-md mb-2 "
