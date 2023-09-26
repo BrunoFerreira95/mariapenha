@@ -90,7 +90,7 @@ export default function AlertaGuarda() {
 
     const { data, error } = await supabase
       .from('codigoComunicacao')
-      .insert([{ codigo: callInput.current?.value }])
+      .insert([{ codigo: callInput.current?.value, id_vitima: vitima?.id  }])
     // Get candidates for caller, save to db
     pc.onicecandidate = (event) => {
       event.candidate && offerCandidates.add(event.candidate.toJSON())

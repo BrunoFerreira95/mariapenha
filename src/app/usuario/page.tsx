@@ -144,7 +144,9 @@ export default function Maria() {
     { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
     (payload) => {
       setInputCallValue(payload.new.codigo)
-      voiceClick()
+      if(payload.new.id_vitima === session?.user.id) {
+        voiceClick()
+      }
     }
   )
   .subscribe()
