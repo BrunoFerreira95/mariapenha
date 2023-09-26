@@ -21,7 +21,7 @@ import Logo from "../../assets/Logo.png";
 const Mapa = dynamic(() => import("../../components/Map"), { ssr: false });
 
 const notify = () =>
-  toast.success("A guarda recebeu seu sinal", {
+  toast.success("A GCM recebeu o seu sinal!", {
     position: "top-center",
     autoClose: 15000,
     hideProgressBar: false,
@@ -361,7 +361,7 @@ export default function Maria() {
               </button>
             </div>
             <div className="flex justify-center p-3">
-              <span>Aguarde, a guarda está sendo contatada!</span>
+              <span>A GCM está sendo contatada!</span>
               <div className="flex justify-center"></div>
             </div>
           </dialog>
