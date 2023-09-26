@@ -7,17 +7,16 @@ import { supabase } from "../../lib/supabaseClient";
 import { useSession } from "@supabase/auth-helpers-react";
 import { initSession } from "@/controler/admin/users/users.controler";
 import { AuthSession } from "@supabase/supabase-js";
-
 import { Logo2, Sirene, Site, Facebook, Instagram } from "@assets/export";
 import dynamic from "next/dynamic";
 import { MyTimer } from "@/components/MyTimer";
 import Header from "@/components/Header";
-import Logo from "@/components/logo";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ConnectFirebase } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import Logo from "../../assets/Logo.png";
 
 const Mapa = dynamic(() => import("../../components/Map"), { ssr: false });
 
@@ -34,15 +33,15 @@ const notify = () =>
   });
 
 export default function Maria() {
-  const [session, setSession] = useState<AuthSession | null>(null)
-  const [dialogSwitch, setDialogSwitch] = useState(false)
-  const { firestore, pc } = ConnectFirebase()
-  let localStream = null
-  let remoteStream = null
-  const voiceSound = useRef(null)
-  const remoteVideo = useRef<HTMLVideoElement>(null)
-  const callInput = useRef<HTMLInputElement>({ current: null })
-  const [inputCallValue, setInputCallValue] = useState('')
+  const [session, setSession] = useState<AuthSession | null>(null);
+  const [dialogSwitch, setDialogSwitch] = useState(false);
+  const { firestore, pc } = ConnectFirebase();
+  let localStream = null;
+  let remoteStream = null;
+  const voiceSound = useRef(null);
+  const remoteVideo = useRef<HTMLVideoElement>(null);
+  const callInput = useRef<HTMLInputElement>({ current: null });
+  const [inputCallValue, setInputCallValue] = useState("");
   const [policePoints, setPolicePoints] = useState([]);
   const [showPolicePoints, setShowPolicePoints] = useState(false);
   const handleViewPolicePoints = (e) => {
@@ -51,8 +50,16 @@ export default function Maria() {
     const policeLocations = [
       { name: "GCM", lat: -22.97794717549575, lng: -49.86824625696814 },
       { name: "SEDE GCM", lat: -22.985907706493986, lng: -49.86897232165561 },
-      { name: "DELEGACIA DA MULHER", lat: -22.97966733718405, lng: -49.87410952060253 },
-      { name: "POLÍCIA MILITAR", lat: -22.965902372024612, lng: -49.865990865022596 },
+      {
+        name: "DELEGACIA DA MULHER",
+        lat: -22.97966733718405,
+        lng: -49.87410952060253,
+      },
+      {
+        name: "POLÍCIA MILITAR",
+        lat: -22.965902372024612,
+        lng: -49.865990865022596,
+      },
       { name: "GCM 2", lat: -22.97890047462074, lng: -49.87858783409708 },
     ];
 
@@ -60,83 +67,82 @@ export default function Maria() {
     setShowPolicePoints(true);
   };
 
-  const dialogRef: RefObject<HTMLDialogElement> = useRef(null)
-  const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null)
+  const dialogRef: RefObject<HTMLDialogElement> = useRef(null);
+  const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null);
   // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
   // // VOICE CALL ---------------------------------------------------------------------------------
   const voiceClick = async () => {
     localStream = await navigator.mediaDevices.getUserMedia({
       video: false,
-      audio: true
-    })
-    remoteStream = new MediaStream()
+      audio: true,
+    });
+    remoteStream = new MediaStream();
 
     // Push tracks from local stream to peer connection
     localStream.getTracks().forEach((track) => {
-      pc.addTrack(track, localStream)
-    })
+      pc.addTrack(track, localStream);
+    });
 
     // Pull tracks from remote stream, add to video stream
     pc.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track)
-      })
-    }
-    const videoElementRemote = voiceSound.current
-    videoElementRemote.srcObject = remoteStream
+        remoteStream.addTrack(track);
+      });
+    };
+    const videoElementRemote = voiceSound.current;
+    videoElementRemote.srcObject = remoteStream;
 
-    voiceReceiverCall()
-  }
+    voiceReceiverCall();
+  };
 
   // 2. Create an offer
   const VoiceCallSound = async () => {
     // Reference Firestore collections for signaling
-    const callDoc = firestore.collection('call').doc()
-    const offerCandidates = callDoc.collection('offerCandidates')
-    const answerCandidates = callDoc.collection('answerCandidates')
+    const callDoc = firestore.collection("call").doc();
+    const offerCandidates = callDoc.collection("offerCandidates");
+    const answerCandidates = callDoc.collection("answerCandidates");
 
-    callInput.current.value = callDoc.id
-    setInputCallValue(callInput.current?.value)
+    callInput.current.value = callDoc.id;
+    setInputCallValue(callInput.current?.value);
 
     const { data, error } = await supabase
-      .from('codigoComunicacao')
-      .insert([{ codigo: callInput.current?.value }])
+      .from("codigoComunicacao")
+      .insert([{ codigo: callInput.current?.value }]);
     // Get candidates for caller, save to db
     pc.onicecandidate = (event) => {
-      event.candidate && offerCandidates.add(event.candidate.toJSON())
-    }
+      event.candidate && offerCandidates.add(event.candidate.toJSON());
+    };
 
     // Create offer
-    const offerDescription = await pc.createOffer()
-    await pc.setLocalDescription(offerDescription)
+    const offerDescription = await pc.createOffer();
+    await pc.setLocalDescription(offerDescription);
 
     const offer = {
       sdp: offerDescription.sdp,
-      type: offerDescription.type
-    }
+      type: offerDescription.type,
+    };
 
-    await callDoc.set({ offer })
+    await callDoc.set({ offer });
 
     // Listen for remote answer
     callDoc.onSnapshot((snapshot) => {
-      const data = snapshot.data()
+      const data = snapshot.data();
       if (!pc.currentRemoteDescription && data?.answer) {
-        const answerDescription = new RTCSessionDescription(data.answer)
-        pc.setRemoteDescription(answerDescription)
+        const answerDescription = new RTCSessionDescription(data.answer);
+        pc.setRemoteDescription(answerDescription);
       }
-    })
+    });
 
     // When answered, add candidate to peer connection
     answerCandidates.onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          const candidate = new RTCIceCandidate(change.doc.data())
-          pc.addIceCandidate(candidate)
+        if (change.type === "added") {
+          const candidate = new RTCIceCandidate(change.doc.data());
+          pc.addIceCandidate(candidate);
         }
-      })
-    })
-
-  }
+      });
+    });
+  };
   supabase
   .channel('custom-insert-channel22222')
   .on(
@@ -151,48 +157,50 @@ export default function Maria() {
   )
   .subscribe()
 
+
   // 3. Answer the call with the unique ID
   const voiceReceiverCall = async () => {
-
-    if(callInput.current.value.length < 0) {}
-    const callId = callInput.current.value
-    console.log('teste',callId)
-    const callDoc = firestore.collection('call').doc(callId)
-    const answerCandidates = callDoc.collection('answerCandidates')
-    const offerCandidates = callDoc.collection('offerCandidates')
+    if (callInput.current.value.length < 0) {
+    }
+    const callId = callInput.current.value;
+    console.log("teste", callId);
+    const callDoc = firestore.collection("call").doc(callId);
+    const answerCandidates = callDoc.collection("answerCandidates");
+    const offerCandidates = callDoc.collection("offerCandidates");
 
     pc.onicecandidate = (event) => {
-      event.candidate && answerCandidates.add(event.candidate.toJSON())
-    }
+      event.candidate && answerCandidates.add(event.candidate.toJSON());
+    };
 
-    const callData = (await callDoc.get()).data()
+    const callData = (await callDoc.get()).data();
 
     if (callData) {
+      const offerDescription = callData.offer;
+      await pc.setRemoteDescription(
+        new RTCSessionDescription(offerDescription)
+      );
 
-      const offerDescription = callData.offer
-      await pc.setRemoteDescription(new RTCSessionDescription(offerDescription))
-
-      const answerDescription = await pc.createAnswer()
-      await pc.setLocalDescription(answerDescription)
+      const answerDescription = await pc.createAnswer();
+      await pc.setLocalDescription(answerDescription);
 
       const answer = {
         type: answerDescription.type,
-        sdp: answerDescription.sdp
-      }
+        sdp: answerDescription.sdp,
+      };
 
-      await callDoc.update({ answer })
+      await callDoc.update({ answer });
 
       offerCandidates.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          console.log(change)
-          if (change.type === 'added') {
-            let data = change.doc.data()
-            pc.addIceCandidate(new RTCIceCandidate(data))
+          console.log(change);
+          if (change.type === "added") {
+            let data = change.doc.data();
+            pc.addIceCandidate(new RTCIceCandidate(data));
           }
-        })
-      })
+        });
+      });
     }
-  }
+  };
 
   useEffect(() => {
     initSession(setSession);
@@ -282,7 +290,6 @@ export default function Maria() {
             enableHighAccuracy: true, // Solicita alta precisão
           }
         );
-
       } else {
         console.error("Geolocalização não suportada neste navegador.");
       }
@@ -304,13 +311,10 @@ export default function Maria() {
       { event: "UPDATE", schema: "public", table: "alertaGuarda" },
       (payload) => {
         if (payload.new.idUser === session?.user.id) {
-          if (payload.new.cor === 'bg-green-500') {
-            return
+          if (payload.new.cor === "bg-green-500") {
+            return;
           }
           notify();
-          
-
-
         }
       }
     )
@@ -342,9 +346,7 @@ export default function Maria() {
             </div>
           </div>
 
-          <div className="">
-            
-          </div>
+          <div className=""></div>
           <dialog
             ref={dialogRef}
             className="sm:w-1/4 md:w-1/3 lg:w-1/4 rounded-lg border-2 border-black"
@@ -360,8 +362,7 @@ export default function Maria() {
             </div>
             <div className="flex justify-center p-3">
               <span>Aguarde, a guarda está sendo contatada!</span>
-              <div className='flex justify-center'>
-              </div>
+              <div className="flex justify-center"></div>
             </div>
           </dialog>
           <video
@@ -370,16 +371,17 @@ export default function Maria() {
             ref={remoteVideo}
             autoPlay
             hidden
-            playsInline></video>
+            playsInline
+          ></video>
           <audio
             className="h-20 w-96 bg-black"
             ref={voiceSound}
             autoPlay
             hidden
-            controls></audio>
+            controls
+          ></audio>
           <input
             ref={callInput}
-
             className="bg-white h-8 font-semibold rounded-md mb-2 "
             defaultValue={inputCallValue}
           />
@@ -398,11 +400,17 @@ export default function Maria() {
                 </tr>
                 <tr className="bg-gray-100">
                   <td className="px-2 py-2 whitespace-nowrap">GCM 2</td>
-                  <td className="px-2 py-2 whitespace-nowrap">(14) 3335-9320</td>
+                  <td className="px-2 py-2 whitespace-nowrap">
+                    (14) 3335-9320
+                  </td>
                 </tr>
                 <tr className="bg-gray-200">
-                  <td className="px-2 py-2 whitespace-nowrap">Delegacia da Mulher</td>
-                  <td className="px-2 py-2 whitespace-nowrap">(14) 3322-5343</td>
+                  <td className="px-2 py-2 whitespace-nowrap">
+                    Delegacia da Mulher
+                  </td>
+                  <td className="px-2 py-2 whitespace-nowrap">
+                    (14) 3322-5343
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -419,12 +427,14 @@ export default function Maria() {
 
           {showPolicePoints && (
             <div className="mt-4">
-              <Mapa/>
+              <Mapa />
             </div>
           )}
+          <div className="mt-4 flex justify-center">
+            <Image src={Logo} alt="Logo" className="w-16 h-16" />
+          </div>
         </div>
       </div>
-        
     </>
   );
 }
