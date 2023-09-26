@@ -88,9 +88,10 @@ export default function AlertaGuarda() {
     callInput.current.value = callDoc.id
     setInputCallValue(callInput.current?.value)
 
+
     const { data, error } = await supabase
       .from('codigoComunicacao')
-      .insert([{ codigo: callInput.current?.value, id_vitima: vitima?.id  }])
+      .insert([{ codigo: callInput.current?.value, id_vitima: vitima?.idUser  }])
     // Get candidates for caller, save to db
     pc.onicecandidate = (event) => {
       event.candidate && offerCandidates.add(event.candidate.toJSON())
@@ -188,10 +189,10 @@ export default function AlertaGuarda() {
     { event: "INSERT", schema: "public", table: "alertaGuarda" },
     (payload) => {
       fetchAllAlertMaria(setAlerts);
-      setOpenConfimation(true);
       setVitima(payload.new);
       const audio = new Audio("/panico.mp3");
-        audio.play();
+      audio.play();
+      setOpenConfimation(true);
       }
     )
     .subscribe();
