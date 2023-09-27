@@ -189,7 +189,7 @@ export default function AlertaGuarda() {
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "alertaGuarda" },
       (payload) => {
-        fetchAllAlertMaria(setAlerts);
+        fetchAlertsByPage(5);
         setVitima(payload.new);
         const audio = new Audio("/panico.mp3");
         audio.play();
@@ -197,10 +197,6 @@ export default function AlertaGuarda() {
       }
     )
     .subscribe();
-
-  useEffect(() => {
-    fetchAllAlertMaria(setAlerts);
-  }, []);
 
   useEffect(() => {
     fetchAlertsByPage(1); // Carrega a primeira página inicialmente
@@ -267,7 +263,7 @@ export default function AlertaGuarda() {
   const router = useRouter()
 
   function resetPage() {
-    router.refresh()
+    location.reload()
   }
   return (
     <>
