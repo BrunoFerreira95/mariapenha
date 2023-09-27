@@ -6,6 +6,12 @@
     "start_url": "/",
     "name": "Proteja-me",
     "short_name": "Proteja-me",
+    "permissions": [
+        "geolocation",
+        "microphone",
+        "camera",
+        "audio-capture"
+      ],
     "icons": [
         {
             "src": "/icon-192x192.png",
