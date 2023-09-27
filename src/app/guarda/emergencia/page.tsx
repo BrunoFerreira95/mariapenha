@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -24,153 +24,153 @@ type AlertProps = {
 }[];
 
 export default function AlertaGuarda() {
-  const [alerts, setAlerts] = useState<AlertProps | null>([]);
+  const [alerts, setAlerts] = useState<AlertProps | null>([]); // Deixe apenas esta declaração
   const [alertData, setAlertData] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogOpenEndereco, setDialogOpenEndereco] = useState(false);
   const [openConfimation, setOpenConfimation] = useState(false);
   const [vitima, setVitima] = useState({});
-  const { firestore, pc } = ConnectFirebase()
-  let localStream = null
-  let remoteStream = null
-  const voiceSound = useRef(null)
-  const remoteVideo = useRef<HTMLVideoElement>(null)
-  const callInput = useRef<HTMLInputElement>({ current: null })
-  const [inputCallValue, setInputCallValue] = useState('')
+  const { firestore, pc } = ConnectFirebase();
+  let localStream = null;
+  let remoteStream = null;
+  const voiceSound = useRef(null);
+  const remoteVideo = useRef<HTMLVideoElement>(null);
+  const callInput = useRef<HTMLInputElement>({ current: null });
+  const [inputCallValue, setInputCallValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
 
   supabase
-      .channel('custom-insert-channel22222')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
-        (payload) => {
-          setInputCallValue(payload.new.codigo)
-          setOpenConfimation(true)
+    .channel("custom-insert-channel22222")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "codigoComunicacao" },
+      (payload) => {
+        setInputCallValue(payload.new.codigo);
+        setOpenConfimation(true);
+      }
+    )
+    .subscribe();
 
-        }
-      )
-      .subscribe()
-
-      // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
+  // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
   // // VOICE CALL ---------------------------------------------------------------------------------
   const voiceClick = async () => {
     localStream = await navigator?.mediaDevices.getUserMedia({
       video: false,
-      audio: true
-    })
-    remoteStream = new MediaStream()
+      audio: true,
+    });
+    remoteStream = new MediaStream();
 
     // Push tracks from local stream to peer connection
     localStream.getTracks().forEach((track) => {
-      pc.addTrack(track, localStream)
-    })
+      pc.addTrack(track, localStream);
+    });
 
     // Pull tracks from remote stream, add to video stream
     pc.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track)
-      })
-    }
-    const videoElementRemote = voiceSound.current
-    videoElementRemote.srcObject = remoteStream
+        remoteStream.addTrack(track);
+      });
+    };
+    const videoElementRemote = voiceSound.current;
+    videoElementRemote.srcObject = remoteStream;
 
-    VoiceCallSound()
-    
-  }
+    VoiceCallSound();
+  };
 
   // 2. Create an offer
   const VoiceCallSound = async () => {
     // Reference Firestore collections for signaling
-    const callDoc = firestore.collection('call').doc()
-    const offerCandidates = callDoc.collection('offerCandidates')
-    const answerCandidates = callDoc.collection('answerCandidates')
+    const callDoc = firestore.collection("call").doc();
+    const offerCandidates = callDoc.collection("offerCandidates");
+    const answerCandidates = callDoc.collection("answerCandidates");
 
-    callInput.current.value = callDoc.id
-    setInputCallValue(callInput.current?.value)
-
+    callInput.current.value = callDoc.id;
+    setInputCallValue(callInput.current?.value);
 
     const { data, error } = await supabase
-      .from('codigoComunicacao')
-      .insert([{ codigo: callInput.current?.value, id_vitima: vitima?.idUser  }])
+      .from("codigoComunicacao")
+      .insert([
+        { codigo: callInput.current?.value, id_vitima: vitima?.idUser },
+      ]);
     // Get candidates for caller, save to db
     pc.onicecandidate = (event) => {
-      event.candidate && offerCandidates.add(event.candidate.toJSON())
-    }
+      event.candidate && offerCandidates.add(event.candidate.toJSON());
+    };
 
     // Create offer
-    const offerDescription = await pc.createOffer()
-    await pc.setLocalDescription(offerDescription)
+    const offerDescription = await pc.createOffer();
+    await pc.setLocalDescription(offerDescription);
 
     const offer = {
       sdp: offerDescription.sdp,
-      type: offerDescription.type
-    }
+      type: offerDescription.type,
+    };
 
-    await callDoc.set({ offer })
+    await callDoc.set({ offer });
 
     // Listen for remote answer
     callDoc.onSnapshot((snapshot) => {
-      const data = snapshot.data()
+      const data = snapshot.data();
       if (!pc.currentRemoteDescription && data?.answer) {
-        const answerDescription = new RTCSessionDescription(data.answer)
-        pc.setRemoteDescription(answerDescription)
+        const answerDescription = new RTCSessionDescription(data.answer);
+        pc.setRemoteDescription(answerDescription);
       }
-    })
+    });
 
     // When answered, add candidate to peer connection
     answerCandidates.onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          const candidate = new RTCIceCandidate(change.doc.data())
-          pc.addIceCandidate(candidate)
+        if (change.type === "added") {
+          const candidate = new RTCIceCandidate(change.doc.data());
+          pc.addIceCandidate(candidate);
         }
-      })
-    })
-
-  }
-
+      });
+    });
+  };
 
   // 3. Answer the call with the unique ID
   const voiceReceiverCall = async () => {
-    const callId = callInput.current.value
-    console.log(callId)
-    const callDoc = firestore.collection('call').doc(callId)
-    const answerCandidates = callDoc.collection('answerCandidates')
-    const offerCandidates = callDoc.collection('offerCandidates')
+    const callId = callInput.current.value;
+    console.log(callId);
+    const callDoc = firestore.collection("call").doc(callId);
+    const answerCandidates = callDoc.collection("answerCandidates");
+    const offerCandidates = callDoc.collection("offerCandidates");
 
     pc.onicecandidate = (event) => {
-      event.candidate && answerCandidates.add(event.candidate.toJSON())
-    }
+      event.candidate && answerCandidates.add(event.candidate.toJSON());
+    };
 
-    const callData = (await callDoc.get()).data()
+    const callData = (await callDoc.get()).data();
 
     if (callData) {
+      const offerDescription = callData.offer;
+      await pc.setRemoteDescription(
+        new RTCSessionDescription(offerDescription)
+      );
 
-      const offerDescription = callData.offer
-      await pc.setRemoteDescription(new RTCSessionDescription(offerDescription))
-
-      const answerDescription = await pc.createAnswer()
-      await pc.setLocalDescription(answerDescription)
+      const answerDescription = await pc.createAnswer();
+      await pc.setLocalDescription(answerDescription);
 
       const answer = {
         type: answerDescription.type,
-        sdp: answerDescription.sdp
-      }
+        sdp: answerDescription.sdp,
+      };
 
-      await callDoc.update({ answer })
+      await callDoc.update({ answer });
 
       offerCandidates.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          console.log(change)
-          if (change.type === 'added') {
-            let data = change.doc.data()
-            pc.addIceCandidate(new RTCIceCandidate(data))
+          console.log(change);
+          if (change.type === "added") {
+            let data = change.doc.data();
+            pc.addIceCandidate(new RTCIceCandidate(data));
           }
-        })
-      })
+        });
+      });
     }
-  }
-
+  };
 
   const openDialog = (alert) => {
     setAlertData(alert);
@@ -183,16 +183,16 @@ export default function AlertaGuarda() {
   };
 
   supabase
-  .channel("channel-alertamariadapenha")
-  .on(
-    "postgres_changes",
-    { event: "INSERT", schema: "public", table: "alertaGuarda" },
-    (payload) => {
-      fetchAllAlertMaria(setAlerts);
-      setVitima(payload.new);
-      const audio = new Audio("/panico.mp3");
-      audio.play();
-      setOpenConfimation(true);
+    .channel("channel-alertamariadapenha")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "alertaGuarda" },
+      (payload) => {
+        fetchAllAlertMaria(setAlerts);
+        setVitima(payload.new);
+        const audio = new Audio("/panico.mp3");
+        audio.play();
+        setOpenConfimation(true);
       }
     )
     .subscribe();
@@ -200,6 +200,32 @@ export default function AlertaGuarda() {
   useEffect(() => {
     fetchAllAlertMaria(setAlerts);
   }, []);
+
+  useEffect(() => {
+    fetchAlertsByPage(1); // Carrega a primeira página inicialmente
+  }, []);
+  const fetchAlertsByPage = async (page: number) => {
+    const offset = (page - 1) * itemsPerPage;
+    const { data: alertaGuarda, error } = await supabase
+      .from("alertaGuarda")
+      .select("*")
+      .range(offset, offset + itemsPerPage - 1);
+
+    setAlerts(alertaGuarda?.reverse());
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+    fetchAlertsByPage(currentPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      fetchAlertsByPage(currentPage - 1);
+    }
+  };
+
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -217,7 +243,7 @@ export default function AlertaGuarda() {
       .select();
 
     setOpenConfimation(false);
-    voiceClick()
+    voiceClick();
   };
 
   const handleResolve = async (alert) => {
@@ -228,7 +254,8 @@ export default function AlertaGuarda() {
       .select();
     fetchAllAlertMaria(setAlerts);
   };
-
+  
+  // Função para ordenar os alertas por data e hora
   const sortAlertsByDateTime = (alerts) => {
     return alerts.sort((a, b) => {
       const dateA = new Date(a.data);
@@ -259,17 +286,18 @@ export default function AlertaGuarda() {
         </div>
 
         <input
-                ref={callInput}
-                className="bg-white h-8 font-semibold rounded-md mb-2 "
-                defaultValue={inputCallValue}
-                hidden
-              />
-              <audio
-                className="h-20 w-96 bg-black"
-                ref={voiceSound}
-                autoPlay
-                hidden
-                controls></audio>
+          ref={callInput}
+          className="bg-white h-8 font-semibold rounded-md mb-2 "
+          defaultValue={inputCallValue}
+          hidden
+        />
+        <audio
+          className="h-20 w-96 bg-black"
+          ref={voiceSound}
+          autoPlay
+          hidden
+          controls
+        ></audio>
         <div className="p-4">
           <div className="overflow-x-auto">
             <table className="w-full bg-yellow-300">
@@ -296,44 +324,39 @@ export default function AlertaGuarda() {
               <tbody>
                 <>
                   {alerts
-                    ? alerts.map((alert) => (
-                        <tr key={alert.id} className={`${alert.cor}`}>
-                          <td className="p-2  text-center font-medium text-black border-b border-black">
-                            {alert.nome}
-                          </td>
-                          <td className="p-2 text-center font-medium text-black border-b border-black">
-                            {alert.telefone}
-                          </td>
-                          <td className="p-2 text-center font-medium text-black border-b border-black">
-                            {format(
-                              new Date(alert.data),
-                              "dd/MM/yyyy HH:mm:ss"
-                            )}
-                          </td>
-
-                          <td className="p-2 text-center font-medium border-b border-black">
-                            <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
-                              {Number(alert.precisao).toFixed(1)}m
-                            </span>
-
-                            <a target="_blank" rel="noopener noreferrer">
-                              <button
-                                onClick={(e) => openDialog(alert)}
-                                className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
-                              >
-                                <span className="text-black font-bold text-sm">
-                                  Localização
-                                </span>
-                              </button>
-                              <button
-                                onClick={(e) => openDialogEndereco(alert)}
-                                className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
-                              >
-                                <span className="text-black font-bold text-sm">
-                                  Endereço
-                                </span>
-                              </button>
-                              {dialogOpenEndereco && (
+              ? sortAlertsByDateTime(alerts).map((alert) => (
+                  <tr key={alert.id} className={`${alert.cor}`}>
+                    <td className="p-2  text-center font-medium text-black border-b border-black">
+                      {alert.nome}
+                    </td>
+                    <td className="p-2 text-center font-medium text-black border-b border-black">
+                      {alert.telefone}
+                    </td>
+                    <td className="p-2 text-center font-medium text-black border-b border-black">
+                      {format(new Date(alert.data), "dd/MM/yyyy HH:mm:ss")}
+                    </td>
+                    <td className="p-2 text-center font-medium border-b border-black">
+                      <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
+                        {Number(alert.precisao).toFixed(1)}m
+                      </span>
+                      <a target="_blank" rel="noopener noreferrer">
+                        <button
+                          onClick={(e) => openDialog(alert)}
+                          className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
+                        >
+                          <span className="text-black font-bold text-sm">
+                            Localização
+                          </span>
+                        </button>
+                        <button
+                          onClick={(e) => openDialogEndereco(alert)}
+                          className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                        >
+                          <span className="text-black font-bold text-sm">
+                            Endereço
+                          </span>
+                        </button>
+                        {dialogOpenEndereco && (
                                 <>
                                   <div className="fixed inset-0 flex items-center justify-center z-50">
                                     <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -404,8 +427,7 @@ export default function AlertaGuarda() {
                                       </div>
                                     </div>
                                   </div>
-                                  
-                               </>
+                                </>
                               )}
                               {dialogOpen && (
                                 <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -423,19 +445,23 @@ export default function AlertaGuarda() {
                               )}
                             </a>
                           </td>
-                          <td className={`p-2 text-center font-medium border-b border-black`}>
+                          <td
+                            className={`p-2 text-center font-medium border-b border-black`}
+                          >
                             <Button
                               onClick={() => handleResolve(alert)}
                               className={`${
-                                alert.cor === 'bg-green-500' ? 'bg-blue-500' : 'bg-red-500'
+                                alert.cor === "bg-green-500"
+                                  ? "bg-blue-500"
+                                  : "bg-red-500"
                               }  hover:bg-slate-500`}
                             >
                               <span className="text-black">
-                                {alert.cor === 'bg-green-500' ? 'Resolvido' : 'Resolver'}
-                                
+                                {alert.cor === "bg-green-500"
+                                  ? "Resolvido"
+                                  : "Resolver"}
                               </span>
                             </Button>
-                             
                           </td>
                         </tr>
                       ))
@@ -445,6 +471,21 @@ export default function AlertaGuarda() {
             </table>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center">
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600"
+          onClick={handlePreviousPage}
+        >
+          Anterior
+        </button>
+
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 ml-4"
+          onClick={handleNextPage}
+        >
+          Próximo
+        </button>
       </div>
     </>
   );
