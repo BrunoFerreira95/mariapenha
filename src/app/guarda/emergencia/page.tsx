@@ -250,7 +250,7 @@ export default function AlertaGuarda() {
       .update({ cor: "bg-green-500" }) // Atualize a cor e o status
       .eq("id", alert.id)
       .select();
-    fetchAllAlertMaria(setAlerts);
+      fetchAlertsByPage(5);
   };
 
   // Função para ordenar os alertas por data e hora
