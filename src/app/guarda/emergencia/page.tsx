@@ -41,7 +41,6 @@ export default function AlertaGuarda() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-
   supabase
     .channel("custom-insert-channel22222")
     .on(
@@ -201,15 +200,18 @@ export default function AlertaGuarda() {
   useEffect(() => {
     fetchAlertsByPage(1); // Carrega a primeira página inicialmente
   }, []);
+ 
   const fetchAlertsByPage = async (page: number) => {
     const offset = (page - 1) * itemsPerPage;
     const { data: alertaGuarda, error } = await supabase
       .from("alertaGuarda")
       .select("*")
-      .range(offset, offset + itemsPerPage - 1);
-
-    setAlerts(alertaGuarda?.reverse());
+      .range(offset, offset + itemsPerPage - 1)
+      .order("data", { ascending: false }); // Ordenar por data, do mais recente para o mais antigo
+  
+    setAlerts(alertaGuarda);
   };
+  
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -222,7 +224,6 @@ export default function AlertaGuarda() {
       fetchAlertsByPage(currentPage - 1);
     }
   };
-
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -251,19 +252,19 @@ export default function AlertaGuarda() {
       .select();
     fetchAllAlertMaria(setAlerts);
   };
-  
+
   // Função para ordenar os alertas por data e hora
-  const sortAlertsByDateTime = (alerts) => {
-    return alerts.sort((a, b) => {
-      const dateA = new Date(a.data);
-      const dateB = new Date(b.data);
-      return dateB - dateA;
-    });
-  };
-  const router = useRouter()
+  // const sortAlertsByDateTime = (alerts) => {
+  //   return alerts.sort((a, b) => {
+  //     const dateA = new Date(a.data);
+  //     const dateB = new Date(b.data);
+  //     return dateB - dateA;
+  //   });
+  // };
+  const router = useRouter();
 
   function resetPage() {
-    location.reload()
+    location.reload();
   }
   return (
     <>
@@ -286,7 +287,7 @@ export default function AlertaGuarda() {
             />
           </div>
         </div>
-        <Button onClick={resetPage}>  Cancelar chamada</Button>
+        <Button onClick={resetPage}> Cancelar chamada</Button>
         <input
           ref={callInput}
           className="bg-white h-8 font-semibold rounded-md mb-2 "
@@ -326,39 +327,42 @@ export default function AlertaGuarda() {
               <tbody>
                 <>
                   {alerts
-              ? sortAlertsByDateTime(alerts).map((alert) => (
-                  <tr key={alert.id} className={`${alert.cor}`}>
-                    <td className="p-2  text-center font-medium text-black border-b border-black">
-                      {alert.nome}
-                    </td>
-                    <td className="p-2 text-center font-medium text-black border-b border-black">
-                      {alert.telefone}
-                    </td>
-                    <td className="p-2 text-center font-medium text-black border-b border-black">
-                      {format(new Date(alert.data), "dd/MM/yyyy HH:mm:ss")}
-                    </td>
-                    <td className="p-2 text-center font-medium border-b border-black">
-                      <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
-                        {Number(alert.precisao).toFixed(1)}m
-                      </span>
-                      <a target="_blank" rel="noopener noreferrer">
-                        <button
-                          onClick={(e) => openDialog(alert)}
-                          className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
-                        >
-                          <span className="text-black font-bold text-sm">
-                            Localização
-                          </span>
-                        </button>
-                        <button
-                          onClick={(e) => openDialogEndereco(alert)}
-                          className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
-                        >
-                          <span className="text-black font-bold text-sm">
-                            Endereço
-                          </span>
-                        </button>
-                        {dialogOpenEndereco && (
+                    ? alerts.map((alert) => (
+                        <tr key={alert.id} className={`${alert.cor}`}>
+                          <td className="p-2  text-center font-medium text-black border-b border-black">
+                            {alert.nome}
+                          </td>
+                          <td className="p-2 text-center font-medium text-black border-b border-black">
+                            {alert.telefone}
+                          </td>
+                          <td className="p-2 text-center font-medium text-black border-b border-black">
+                            {format(
+                              new Date(alert.data),
+                              "dd/MM/yyyy HH:mm:ss"
+                            )}
+                          </td>
+                          <td className="p-2 text-center font-medium border-b border-black">
+                            <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
+                              {Number(alert.precisao).toFixed(1)}m
+                            </span>
+                            <a target="_blank" rel="noopener noreferrer">
+                              <button
+                                onClick={(e) => openDialog(alert)}
+                                className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
+                              >
+                                <span className="text-black font-bold text-sm">
+                                  Localização
+                                </span>
+                              </button>
+                              <button
+                                onClick={(e) => openDialogEndereco(alert)}
+                                className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                              >
+                                <span className="text-black font-bold text-sm">
+                                  Endereço
+                                </span>
+                              </button>
+                              {dialogOpenEndereco && (
                                 <>
                                   <div className="fixed inset-0 flex items-center justify-center z-50">
                                     <div className="absolute inset-0 bg-black opacity-50"></div>
