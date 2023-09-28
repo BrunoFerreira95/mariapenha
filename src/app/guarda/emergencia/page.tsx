@@ -48,7 +48,7 @@ export default function AlertaGuarda() {
       { event: "INSERT", schema: "public", table: "codigoComunicacao" },
       (payload) => {
         setInputCallValue(payload.new.codigo);
-        setOpenConfimation(true);
+        setOpenConfimation(false);
         setCurrentPage(1);
       }
     )
