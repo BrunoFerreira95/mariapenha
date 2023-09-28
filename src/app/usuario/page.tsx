@@ -343,7 +343,7 @@ supabase.channel('custom-insert-channelreset-call')
       chamadaCancelada() 
       setTimeout(() => {
         location.reload();
-      }, 15000)
+      }, 5000)
     } 
   }
 )
