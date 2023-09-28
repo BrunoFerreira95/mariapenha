@@ -241,8 +241,6 @@ export default function AlertaGuarda() {
       .update({ status: "confimado" })
       .eq("id", vitima?.id)
       .select();
-
-    setOpenConfimation(false);
     voiceClick();
   };
 
