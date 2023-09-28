@@ -20,6 +20,18 @@ import Logo from "../../assets/Logo.png";
 
 const Mapa = dynamic(() => import("../../components/Map"), { ssr: false });
 
+const chamadaCancelada = () =>
+  toast.success("A GCM desligou a chamada!", {
+    position: "top-center",
+    autoClose: 15000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
 const notify = () =>
   toast.success("A GCM recebeu o seu sinal!", {
     position: "top-center",
@@ -328,6 +340,7 @@ supabase.channel('custom-insert-channelreset-call')
   { event: 'INSERT', schema: 'public', table: 'resetCall' },
   (payload) => {
     if(payload.new.id_receiver === session?.user.id) {
+      chamadaCancelada() 
       location.reload();
     } 
   }
