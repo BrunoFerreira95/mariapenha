@@ -49,6 +49,7 @@ export default function AlertaGuarda() {
       (payload) => {
         setInputCallValue(payload.new.codigo);
         setOpenConfimation(true);
+        setCurrentPage(1);
       }
     )
     .subscribe();
@@ -193,13 +194,12 @@ export default function AlertaGuarda() {
         const audio = new Audio("/panico.mp3");
         audio.play();
         setOpenConfimation(true);
+        setCurrentPage(1); // Adicione esta linha para voltar à primeira página
       }
     )
     .subscribe();
 
-  useEffect(() => {
-    fetchAlertsByPage(1); // Carrega a primeira página inicialmente
-  }, []);
+  
  
   const fetchAlertsByPage = async (page: number) => {
     const offset = (page - 1) * itemsPerPage;
@@ -207,23 +207,25 @@ export default function AlertaGuarda() {
       .from("alertaGuarda")
       .select("*")
       .range(offset, offset + itemsPerPage - 1)
-      .order("data", { ascending: false }); // Ordenar por data, do mais recente para o mais antigo
+      .order("created_at", { ascending: false }); // Ordenar por data, do mais recente para o mais antigo
   
-    setAlerts(alertaGuarda);
-  };
+      setAlerts(alertaGuarda);
+    };
   
 
   const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
+    setCurrentPage((prevPage) => Math.max(prevPage + 1, 1));
     fetchAlertsByPage(currentPage + 1);
   };
 
   const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      fetchAlertsByPage(currentPage - 1);
-    }
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    fetchAlertsByPage(currentPage - 1);
   };
+  useEffect(() => {
+    fetchAlertsByPage(1); // Carrega a primeira página inicialmente
+  }, []);
+  
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -250,7 +252,7 @@ export default function AlertaGuarda() {
       .update({ cor: "bg-green-500" }) // Atualize a cor e o status
       .eq("id", alert.id)
       .select();
-      fetchAlertsByPage(5);
+      fetchAlertsByPage(1);
   };
 
   // Função para ordenar os alertas por data e hora
@@ -287,13 +289,15 @@ export default function AlertaGuarda() {
             />
           </div>
         </div>
-        <Button onClick={resetPage}> Cancelar chamada</Button>
+        <div className="flex justify-center">
+        <Button onClick={resetPage}> Cancelar Chamada</Button>
         <input
           ref={callInput}
           className="bg-white h-8 font-semibold rounded-md mb-2 "
           defaultValue={inputCallValue}
           hidden
         />
+        </div>
         <audio
           className="h-20 w-96 bg-black"
           ref={voiceSound}
@@ -482,6 +486,7 @@ export default function AlertaGuarda() {
         <button
           className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600"
           onClick={handlePreviousPage}
+          disabled={currentPage <= 1} // Desabilitar o botão quando estiver na primeira página
         >
           Anterior
         </button>
