@@ -263,7 +263,15 @@ export default function AlertaGuarda() {
   // };
   const router = useRouter();
 
-  function resetPage() {
+  async function resetPage() {
+
+    const { data, error } = await supabase
+      .from('resetCall')
+      .insert([
+        { id_receiver: vitima?.idUser },
+      ])
+      .select()
+
     location.reload();
   }
   return (
@@ -459,8 +467,8 @@ export default function AlertaGuarda() {
                           <Button
                             onClick={() => handleResolve(alert)}
                             className={`${alert.cor === "bg-green-500"
-                                ? "bg-blue-500"
-                                : "bg-red-500"
+                              ? "bg-blue-500"
+                              : "bg-red-500"
                               }  hover:bg-slate-500`}
                           >
                             <span className="text-black">

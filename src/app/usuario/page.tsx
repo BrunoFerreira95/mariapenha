@@ -321,6 +321,19 @@ export default function Maria() {
     )
     .subscribe();
 
+    
+supabase.channel('custom-insert-channelreset-call')
+.on(
+  'postgres_changes',
+  { event: 'INSERT', schema: 'public', table: 'resetCall' },
+  (payload) => {
+    if(payload.new.id_receiver === session?.user.id) {
+      location.reload();
+    } 
+  }
+)
+.subscribe()
+
   return (
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
