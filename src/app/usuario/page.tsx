@@ -20,6 +20,18 @@ import Logo from "../../assets/Logo.png";
 
 const Mapa = dynamic(() => import("../../components/Map"), { ssr: false });
 
+const chamadaCancelada = () =>
+  toast.success("A GCM desligou a chamada!", {
+    position: "top-center",
+    autoClose: 15000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
 const notify = () =>
   toast.success("A GCM recebeu o seu sinal!", {
     position: "top-center",
@@ -321,6 +333,21 @@ export default function Maria() {
     )
     .subscribe();
 
+    
+supabase.channel('custom-insert-channelreset-call')
+.on(
+  'postgres_changes',
+  { event: 'INSERT', schema: 'public', table: 'resetCall' },
+  (payload) => {
+    if(payload.new.id_receiver === session?.user.id) {
+      chamadaCancelada() 
+      setTimeout(() => {
+        location.reload();
+      }, 5000)
+    } 
+  }
+)
+.subscribe()
   return (
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
