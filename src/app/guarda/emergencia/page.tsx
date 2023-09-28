@@ -189,7 +189,7 @@ export default function AlertaGuarda() {
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "alertaGuarda" },
       (payload) => {
-        fetchAlertsByPage(5);
+        fetchAlertsByPage(1);
         setVitima(payload.new);
         const audio = new Audio("/panico.mp3");
         audio.play();
@@ -244,6 +244,7 @@ export default function AlertaGuarda() {
 
     setOpenConfimation(false);
     voiceClick();
+    
   };
 
   const handleResolve = async (alert) => {
