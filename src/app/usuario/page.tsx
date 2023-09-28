@@ -341,12 +341,13 @@ supabase.channel('custom-insert-channelreset-call')
   (payload) => {
     if(payload.new.id_receiver === session?.user.id) {
       chamadaCancelada() 
-      location.reload();
+      setTimeout(() => {
+        location.reload();
+      }, 15000)
     } 
   }
 )
 .subscribe()
-
   return (
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
