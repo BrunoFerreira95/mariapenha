@@ -48,7 +48,6 @@ export default function AlertaGuarda() {
       { event: "INSERT", schema: "public", table: "codigoComunicacao" },
       (payload) => {
         setInputCallValue(payload.new.codigo);
-        setOpenConfimation(false);
         setCurrentPage(1);
       }
     )
@@ -199,8 +198,8 @@ export default function AlertaGuarda() {
     )
     .subscribe();
 
-  
- 
+
+
   const fetchAlertsByPage = async (page: number) => {
     const offset = (page - 1) * itemsPerPage;
     const { data: alertaGuarda, error } = await supabase
@@ -208,10 +207,10 @@ export default function AlertaGuarda() {
       .select("*")
       .range(offset, offset + itemsPerPage - 1)
       .order("created_at", { ascending: false }); // Ordenar por data, do mais recente para o mais antigo
-  
-      setAlerts(alertaGuarda);
-    };
-  
+
+    setAlerts(alertaGuarda);
+  };
+
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage + 1, 1));
@@ -225,7 +224,7 @@ export default function AlertaGuarda() {
   useEffect(() => {
     fetchAlertsByPage(1); // Carrega a primeira página inicialmente
   }, []);
-  
+
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -241,6 +240,7 @@ export default function AlertaGuarda() {
       .update({ status: "confimado" })
       .eq("id", vitima?.id)
       .select();
+    setOpenConfimation(false);
     voiceClick();
   };
 
@@ -250,7 +250,7 @@ export default function AlertaGuarda() {
       .update({ cor: "bg-green-500" }) // Atualize a cor e o status
       .eq("id", alert.id)
       .select();
-      fetchAlertsByPage(1);
+    fetchAlertsByPage(1);
   };
 
   // Função para ordenar os alertas por data e hora
@@ -288,13 +288,13 @@ export default function AlertaGuarda() {
           </div>
         </div>
         <div className="flex justify-center">
-        <Button onClick={resetPage}> Cancelar Chamada</Button>
-        <input
-          ref={callInput}
-          className="bg-white h-8 font-semibold rounded-md mb-2 "
-          defaultValue={inputCallValue}
-          hidden
-        />
+          <Button onClick={resetPage}> Cancelar Chamada</Button>
+          <input
+            ref={callInput}
+            className="bg-white h-8 font-semibold rounded-md mb-2 "
+            defaultValue={inputCallValue}
+            hidden
+          />
         </div>
         <audio
           className="h-20 w-96 bg-black"
@@ -330,149 +330,148 @@ export default function AlertaGuarda() {
                 <>
                   {alerts
                     ? alerts.map((alert) => (
-                        <tr key={alert.id} className={`${alert.cor}`}>
-                          <td className="p-2  text-center font-medium text-black border-b border-black">
-                            {alert.nome}
-                          </td>
-                          <td className="p-2 text-center font-medium text-black border-b border-black">
-                            {alert.telefone}
-                          </td>
-                          <td className="p-2 text-center font-medium text-black border-b border-black">
-                            {format(
-                              new Date(alert.data),
-                              "dd/MM/yyyy HH:mm:ss"
-                            )}
-                          </td>
-                          <td className="p-2 text-center font-medium border-b border-black">
-                            <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
-                              {Number(alert.precisao).toFixed(1)}m
-                            </span>
-                            <a target="_blank" rel="noopener noreferrer">
-                              <button
-                                onClick={(e) => openDialog(alert)}
-                                className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
-                              >
-                                <span className="text-black font-bold text-sm">
-                                  Localização
-                                </span>
-                              </button>
-                              <button
-                                onClick={(e) => openDialogEndereco(alert)}
-                                className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
-                              >
-                                <span className="text-black font-bold text-sm">
-                                  Endereço
-                                </span>
-                              </button>
-                              {dialogOpenEndereco && (
-                                <>
-                                  <div className="fixed inset-0 flex items-center justify-center z-50">
-                                    <div className="absolute inset-0 bg-black opacity-50"></div>
-                                    <div className="bg-white p-4 flex flex-col sm:w-1/4 md:w-2/4 lg:w-1/4 rounded-lg shadow-lg z-10">
-                                      <label htmlFor="nome">
-                                        Nome completo:
-                                      </label>
-                                      <input
-                                        className="border-2 border-black rounded-lg"
-                                        type="text"
-                                        defaultValue={alertData?.nome}
-                                      />
-                                      <label htmlFor="telefone">
-                                        Telefone:
-                                      </label>
-                                      <input
-                                        className="border-2 border-black rounded-lg"
-                                        type="text"
-                                        defaultValue={alertData?.telefone}
-                                      />
-                                      <label htmlFor="rua">Rua:</label>
-                                      <input
-                                        type="text"
-                                        defaultValue={alertData?.rua}
-                                        className="border-2 border-black rounded-lg"
-                                      />
-                                      <label htmlFor="numero">Numero:</label>
-                                      <input
-                                        type="text"
-                                        defaultValue={alertData?.numero}
-                                        className="border-2 border-black rounded-lg"
-                                      />
-                                      <label htmlFor="bairro">Bairro:</label>
-                                      <input
-                                        type="text"
-                                        defaultValue={alertData?.bairro}
-                                        className="border-2 border-black rounded-lg"
-                                      />
-                                      <label htmlFor="cidade">Cidade:</label>
-                                      <input
-                                        type="text"
-                                        defaultValue={alertData?.cidade}
-                                        className="border-2 border-black rounded-lg"
-                                      />
-                                      <button
-                                        onClick={closeDialog2}
-                                        className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
-                                      >
-                                        Fechar
-                                      </button>
-                                    </div>
-                                  </div>
-                                </>
-                              )}
-                              {openConfimation && (
-                                <>
-                                  <div className="fixed inset-0 flex items-center justify-center z-50">
-                                    <div className="absolute inset-0 bg-black opacity-50"></div>
-                                    <div className="bg-white p-4 flex flex-col w-1/4 rounded-lg shadow-lg z-10">
-                                      Confirme o alerta
-                                      <div>
-                                        <button
-                                          onClick={handleConfirmation}
-                                          className="p-5 mt-2 bg-green-500 rounded-lg"
-                                        >
-                                          Sim, recebi
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </>
-                              )}
-                              {dialogOpen && (
+                      <tr key={alert.id} className={`${alert.cor}`}>
+                        <td className="p-2  text-center font-medium text-black border-b border-black">
+                          {alert.nome}
+                        </td>
+                        <td className="p-2 text-center font-medium text-black border-b border-black">
+                          {alert.telefone}
+                        </td>
+                        <td className="p-2 text-center font-medium text-black border-b border-black">
+                          {format(
+                            new Date(alert.data),
+                            "dd/MM/yyyy HH:mm:ss"
+                          )}
+                        </td>
+                        <td className="p-2 text-center font-medium border-b border-black">
+                          <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
+                            {Number(alert.precisao).toFixed(1)}m
+                          </span>
+                          <a target="_blank" rel="noopener noreferrer">
+                            <button
+                              onClick={(e) => openDialog(alert)}
+                              className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
+                            >
+                              <span className="text-black font-bold text-sm">
+                                Localização
+                              </span>
+                            </button>
+                            <button
+                              onClick={(e) => openDialogEndereco(alert)}
+                              className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                            >
+                              <span className="text-black font-bold text-sm">
+                                Endereço
+                              </span>
+                            </button>
+                            {dialogOpenEndereco && (
+                              <>
                                 <div className="fixed inset-0 flex items-center justify-center z-50">
                                   <div className="absolute inset-0 bg-black opacity-50"></div>
-                                  <div className="bg-white p-4 w-1/2 rounded-lg shadow-lg z-10">
-                                    <Mapa data={alertData} />
+                                  <div className="bg-white p-4 flex flex-col sm:w-1/4 md:w-2/4 lg:w-1/4 rounded-lg shadow-lg z-10">
+                                    <label htmlFor="nome">
+                                      Nome completo:
+                                    </label>
+                                    <input
+                                      className="border-2 border-black rounded-lg"
+                                      type="text"
+                                      defaultValue={alertData?.nome}
+                                    />
+                                    <label htmlFor="telefone">
+                                      Telefone:
+                                    </label>
+                                    <input
+                                      className="border-2 border-black rounded-lg"
+                                      type="text"
+                                      defaultValue={alertData?.telefone}
+                                    />
+                                    <label htmlFor="rua">Rua:</label>
+                                    <input
+                                      type="text"
+                                      defaultValue={alertData?.rua}
+                                      className="border-2 border-black rounded-lg"
+                                    />
+                                    <label htmlFor="numero">Numero:</label>
+                                    <input
+                                      type="text"
+                                      defaultValue={alertData?.numero}
+                                      className="border-2 border-black rounded-lg"
+                                    />
+                                    <label htmlFor="bairro">Bairro:</label>
+                                    <input
+                                      type="text"
+                                      defaultValue={alertData?.bairro}
+                                      className="border-2 border-black rounded-lg"
+                                    />
+                                    <label htmlFor="cidade">Cidade:</label>
+                                    <input
+                                      type="text"
+                                      defaultValue={alertData?.cidade}
+                                      className="border-2 border-black rounded-lg"
+                                    />
                                     <button
-                                      onClick={closeDialog}
+                                      onClick={closeDialog2}
                                       className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
                                     >
                                       Fechar
                                     </button>
                                   </div>
                                 </div>
-                              )}
-                            </a>
-                          </td>
-                          <td
-                            className={`p-2 text-center font-medium border-b border-black`}
-                          >
-                            <Button
-                              onClick={() => handleResolve(alert)}
-                              className={`${
-                                alert.cor === "bg-green-500"
-                                  ? "bg-blue-500"
-                                  : "bg-red-500"
+                              </>
+                            )}
+                            {openConfimation && (
+                              <>
+                                <div className="fixed inset-0 flex items-center justify-center z-50">
+                                  <div className="absolute inset-0 bg-black opacity-50"></div>
+                                  <div className="bg-white p-4 flex flex-col w-1/4 rounded-lg shadow-lg z-10">
+                                    Confirme o alerta
+                                    <div>
+                                      <button
+                                        onClick={handleConfirmation}
+                                        className="p-5 mt-2 bg-green-500 rounded-lg"
+                                      >
+                                        Sim, recebi
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </>
+                            )}
+                            {dialogOpen && (
+                              <div className="fixed inset-0 flex items-center justify-center z-50">
+                                <div className="absolute inset-0 bg-black opacity-50"></div>
+                                <div className="bg-white p-4 w-1/2 rounded-lg shadow-lg z-10">
+                                  <Mapa data={alertData} />
+                                  <button
+                                    onClick={closeDialog}
+                                    className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
+                                  >
+                                    Fechar
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </a>
+                        </td>
+                        <td
+                          className={`p-2 text-center font-medium border-b border-black`}
+                        >
+                          <Button
+                            onClick={() => handleResolve(alert)}
+                            className={`${alert.cor === "bg-green-500"
+                                ? "bg-blue-500"
+                                : "bg-red-500"
                               }  hover:bg-slate-500`}
-                            >
-                              <span className="text-black">
-                                {alert.cor === "bg-green-500"
-                                  ? "Resolvido"
-                                  : "Resolver"}
-                              </span>
-                            </Button>
-                          </td>
-                        </tr>
-                      ))
+                          >
+                            <span className="text-black">
+                              {alert.cor === "bg-green-500"
+                                ? "Resolvido"
+                                : "Resolver"}
+                            </span>
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
                     : null}
                 </>
               </tbody>
