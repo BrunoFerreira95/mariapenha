@@ -48,7 +48,7 @@ export default function AlertaGuarda() {
       { event: "INSERT", schema: "public", table: "codigoComunicacao" },
       (payload) => {
         setInputCallValue(payload.new.codigo);
-        setOpenConfimation(true);
+        setOpenConfimation(false);
         setCurrentPage(1);
       }
     )
@@ -241,8 +241,6 @@ export default function AlertaGuarda() {
       .update({ status: "confimado" })
       .eq("id", vitima?.id)
       .select();
-
-    setOpenConfimation(false);
     voiceClick();
     
   };
