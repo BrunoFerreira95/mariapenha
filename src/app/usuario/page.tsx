@@ -403,7 +403,7 @@ export default function Maria() {
                 <tr className="bg-gray-100">
                   <td className="px-2 py-2 whitespace-nowrap">GCM 2</td>
                   <td className="px-2 py-2 whitespace-nowrap">
-                    (14) 3335-9320
+                    (14) 3326-4570
                   </td>
                 </tr>
                 <tr className="bg-gray-200">
