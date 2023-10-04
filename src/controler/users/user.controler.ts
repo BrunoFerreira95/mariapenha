@@ -58,12 +58,20 @@ export async function getLocation() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        homeMobileCountryCode: 310,
-        homeMobileNetworkCode: 410,
+        homeMobileCountryCode: 724, // Código do país (Brasil)
+        homeMobileNetworkCode: 10,  // Código da rede móvel (Verifique a operadora)
         radioType: 'gsm',
-        carrier: 'Vodafone',
         considerIp: true,
-        cellTowers: [], // Preencha com informações de torres de celular, se aplicável.
+        cellTowers: [
+          {
+            cellId: 12345, // ID da torre de celular
+            locationAreaCode: 67890, // Código da área de localização
+            mobileCountryCode: 724, // Código do país (Brasil)
+            mobileNetworkCode: 10, // Código da rede móvel (Verifique a operadora)
+            age: 0,
+            signalStrength: -60,
+          }
+        ],
         wifiAccessPoints: [], // Preencha com informações de pontos de acesso Wi-Fi, se aplicável.
       }),
     });
