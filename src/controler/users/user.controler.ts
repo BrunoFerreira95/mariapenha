@@ -47,3 +47,38 @@ export async function setUser(data, id) {
     console.error("Error fetching user data:", error);
   }
 }
+
+export async function getLocation() {
+  const apiUrl = `https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyC_MfeXrxRalul5jY2oKFKRmOh9UGHfB3c`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        homeMobileCountryCode: 310,
+        homeMobileNetworkCode: 410,
+        radioType: 'gsm',
+        carrier: 'Vodafone',
+        considerIp: true,
+        cellTowers: [], // Preencha com informações de torres de celular, se aplicável.
+        wifiAccessPoints: [], // Preencha com informações de pontos de acesso Wi-Fi, se aplicável.
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Não foi possível obter a localização.');
+    }
+
+    const data = await response.json();
+    const latitude = data.location.lat;
+    const longitude = data.location.lng;
+
+    return { latitude, longitude };
+  } catch (error) {
+    console.error('Erro ao obter localização:', error);
+    throw error;
+  }
+}
