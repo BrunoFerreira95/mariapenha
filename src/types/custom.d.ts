@@ -11,6 +11,7 @@ declare namespace NodeJS {
       MESSAGINGSENDERID: string;
       APPID: string;
       MEASUREMENTID: string;
+      API_LOCATION: string
       // Add any other environment variables here if needed
     }
   }

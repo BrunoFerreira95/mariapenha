@@ -47,4 +47,3 @@ export async function setUser(data, id) {
     console.error("Error fetching user data:", error);
   }
 }
-//
