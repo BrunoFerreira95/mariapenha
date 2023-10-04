@@ -17,7 +17,6 @@ import { ConnectFirebase } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Logo from "../../assets/Logo.png";
-import { getLocation } from "@/controler/users/user.controler";
 
 const Mapa = dynamic(() => import("../../components/Map"), { ssr: false });
 
@@ -157,18 +156,18 @@ export default function Maria() {
     });
   };
   supabase
-    .channel('custom-insert-channel22222')
-    .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
-      (payload) => {
-        setInputCallValue(payload.new.codigo)
-        if (payload.new.id_vitima === session?.user.id) {
-          voiceClick()
-        }
+  .channel('custom-insert-channel22222')
+  .on(
+    'postgres_changes',
+    { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
+    (payload) => {
+      setInputCallValue(payload.new.codigo)
+      if(payload.new.id_vitima === session?.user.id) {
+        voiceClick()
       }
-    )
-    .subscribe()
+    }
+  )
+  .subscribe()
 
 
   // 3. Answer the call with the unique ID
@@ -224,6 +223,7 @@ export default function Maria() {
     latitude,
     longitude,
     local,
+    precisao
   ) {
     let { data: profiles, error } = await supabase
       .from("profiles")
@@ -243,6 +243,7 @@ export default function Maria() {
           cidade: profiles[0].cidade,
           numero: profiles[0].numero,
           idUser: profiles[0].id,
+          precisao,
         },
       ])
       .select();
@@ -256,8 +257,13 @@ export default function Maria() {
 
   async function handleSendAlert() {
     try {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
             try {
-              const teste = await getLocation()
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+              const precisao = position.coords.accuracy; // Obtém a precisão em metros
               const dataAtual = new Date().toLocaleString("pt-BR", {
                 timeZone: "UTC",
               });
@@ -267,23 +273,38 @@ export default function Maria() {
               );
 
               const ponto = {
-                lat: teste?.latitude,
-                lng: teste?.longitude,
+                lat: latitude,
+                lng: longitude,
               };
 
               let local;
 
               // Agora você pode usar 'precisao' em sua função ou armazená-la para referência futura
+              if (precisao) {
                 createANewAlert(
                   dataFormatada,
-                  teste.latitude,
-                  teste.longitude,
+                  latitude,
+                  longitude,
                   local,
+                  precisao
                 );
                 showModal(dialogRef);
+              }
             } catch (error) {
               console.error("Erro no processamento da localização:", error);
             }
+          },
+          (error) => {
+            // Tratamento de erros aqui
+            console.error("Erro na solicitação de localização:", error);
+          },
+          {
+            enableHighAccuracy: true, // Solicita alta precisão
+          }
+        );
+      } else {
+        console.error("Geolocalização não suportada neste navegador.");
+      }
     } catch (error) {
       console.error("Erro na função handleSendAlert:", error);
     }
@@ -312,21 +333,21 @@ export default function Maria() {
     )
     .subscribe();
 
-
-  supabase.channel('custom-insert-channelreset-call')
-    .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'resetCall' },
-      (payload) => {
-        if (payload.new.id_receiver === session?.user.id) {
-          chamadaCancelada()
-          setTimeout(() => {
-            location.reload();
-          }, 5000)
-        }
-      }
-    )
-    .subscribe()
+    
+supabase.channel('custom-insert-channelreset-call')
+.on(
+  'postgres_changes',
+  { event: 'INSERT', schema: 'public', table: 'resetCall' },
+  (payload) => {
+    if(payload.new.id_receiver === session?.user.id) {
+      chamadaCancelada() 
+      setTimeout(() => {
+        location.reload();
+      }, 5000)
+    } 
+  }
+)
+.subscribe()
   return (
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
