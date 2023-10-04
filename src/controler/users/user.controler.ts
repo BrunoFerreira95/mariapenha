@@ -58,7 +58,7 @@ export async function getLocation() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        homeMobileCountryCode: 310,
+        homeMobileCountryCode: 724,
         homeMobileNetworkCode: 410,
         radioType: 'gsm',
         carrier: 'Vodafone',
