@@ -33,7 +33,7 @@ const Contatos = () => {
                 </tr>
                 <tr>
                   <td className="pr-4">GCM 2</td>
-                  <td>(14) 3335-9320</td>
+                  <td>(14) 3326-4570</td>
                 </tr>
                 <tr>
                   <td className="pr-4">Delegacia da Mulher</td>
