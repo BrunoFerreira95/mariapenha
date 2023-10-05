@@ -80,6 +80,7 @@ export default function Maria() {
   };
 
   const dialogRef: RefObject<HTMLDialogElement> = useRef(null);
+  const dialogRef2: RefObject<HTMLDialogElement> = useRef(null);
   const dialog2Ref: RefObject<HTMLDialogElement> = useRef(null);
   // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
   // // VOICE CALL ---------------------------------------------------------------------------------
@@ -156,18 +157,19 @@ export default function Maria() {
     });
   };
   supabase
-  .channel('custom-insert-channel22222')
-  .on(
-    'postgres_changes',
-    { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
-    (payload) => {
-      setInputCallValue(payload.new.codigo)
-      if(payload.new.id_vitima === session?.user.id) {
-        voiceClick()
+    .channel('custom-insert-channel22222')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'codigoComunicacao' },
+      (payload) => {
+        setInputCallValue(payload.new.codigo)
+        if (payload.new.id_vitima === session?.user.id) {
+          showModal(dialogRef2)
+          voiceClick()
+        }
       }
-    }
-  )
-  .subscribe()
+    )
+    .subscribe()
 
 
   // 3. Answer the call with the unique ID
@@ -333,21 +335,21 @@ export default function Maria() {
     )
     .subscribe();
 
-    
-supabase.channel('custom-insert-channelreset-call')
-.on(
-  'postgres_changes',
-  { event: 'INSERT', schema: 'public', table: 'resetCall' },
-  (payload) => {
-    if(payload.new.id_receiver === session?.user.id) {
-      chamadaCancelada() 
-      setTimeout(() => {
-        location.reload();
-      }, 5000)
-    } 
-  }
-)
-.subscribe()
+
+  supabase.channel('custom-insert-channelreset-call')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'resetCall' },
+      (payload) => {
+        if (payload.new.id_receiver === session?.user.id) {
+          chamadaCancelada()
+          setTimeout(() => {
+            location.reload();
+          }, 5000)
+        }
+      }
+    )
+    .subscribe()
   return (
     <>
       <div className=" bg-purple-200 flex justify-center items-center">
@@ -384,6 +386,18 @@ supabase.channel('custom-insert-channelreset-call')
             </div>
             <div className="flex justify-center p-3">
               <span>A GCM está sendo contatada!</span>
+              <div className="flex justify-center"></div>
+            </div>
+          </dialog>
+          <dialog
+            ref={dialogRef2}
+            className="sm:w-1/4 md:w-1/3 lg:w-1/4 rounded-lg border-2 border-black"
+            style={{ maxHeight: "80vh" }}
+          >
+            <div className="flex justify-end">
+            </div>
+            <div className="flex justify-center p-3">
+              <span>A GCM entrando em contato!</span>
               <div className="flex justify-center"></div>
             </div>
           </dialog>
