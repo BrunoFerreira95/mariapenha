@@ -130,6 +130,17 @@ export default function AlertaGuarda() {
     });
   };
 
+
+  supabase.channel('custom-insert-channel')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'errorConnect' },
+      (payload) => {
+        //
+      }
+    )
+    .subscribe()
+
   // 3. Answer the call with the unique ID
   const voiceReceiverCall = async () => {
     const callId = callInput.current.value;
