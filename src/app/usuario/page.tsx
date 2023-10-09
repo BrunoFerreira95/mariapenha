@@ -211,7 +211,9 @@ export default function Maria() {
             let data = change.doc.data();
             pc.addIceCandidate(new RTCIceCandidate(data));
             if (pc?.iceConnectionState === 'closed' || pc?.iceConnectionState === 'disconnected' || pc?.iceConnectionState === 'failed') {
-              console.log('Failed to connect to screen')
+              SendErrorConnect()
+
+
             } else {
             }
           }
@@ -219,6 +221,15 @@ export default function Maria() {
       });
     }
   };
+
+  async function SendErrorConnect() {
+    await supabase
+      .from('errorConnect')
+      .insert([
+        { connect: 'error' },
+      ])
+      .select()
+  }
 
   useEffect(() => {
     initSession(setSession);
