@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, RefObject } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { supabase } from "@/lib/supabaseClient";
@@ -52,6 +52,8 @@ export default function AlertaGuarda() {
       }
     )
     .subscribe();
+
+  const dialogRef1: RefObject<HTMLDialogElement> = useRef(null);
 
   // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
   // // VOICE CALL ---------------------------------------------------------------------------------
@@ -130,16 +132,16 @@ export default function AlertaGuarda() {
     });
   };
 
-
-  supabase.channel('custom-insert-channel')
+  supabase
+    .channel("custom-insert-channel")
     .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'errorConnect' },
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "errorConnect" },
       (payload) => {
-        //
+        showModal(dialogRef1);
       }
     )
-    .subscribe()
+    .subscribe();
 
   // 3. Answer the call with the unique ID
   const voiceReceiverCall = async () => {
@@ -209,8 +211,6 @@ export default function AlertaGuarda() {
     )
     .subscribe();
 
-
-
   const fetchAlertsByPage = async (page: number) => {
     const offset = (page - 1) * itemsPerPage;
     const { data: alertaGuarda, error } = await supabase
@@ -221,7 +221,6 @@ export default function AlertaGuarda() {
 
     setAlerts(alertaGuarda);
   };
-
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage + 1, 1));
@@ -236,13 +235,18 @@ export default function AlertaGuarda() {
     fetchAlertsByPage(1); // Carrega a primeira página inicialmente
   }, []);
 
-
   const closeDialog = () => {
     setDialogOpen(false);
   };
 
   const closeDialog2 = () => {
     setDialogOpenEndereco(false);
+  };
+
+  const fecharDialog = () => {
+    if (dialogRef1.current) {
+      dialogRef1.current.close();
+    }
   };
 
   const handleConfirmation = async () => {
@@ -275,13 +279,10 @@ export default function AlertaGuarda() {
   const router = useRouter();
 
   async function resetPage() {
-
     const { data, error } = await supabase
-      .from('resetCall')
-      .insert([
-        { id_receiver: vitima?.idUser },
-      ])
-      .select()
+      .from("resetCall")
+      .insert([{ id_receiver: vitima?.idUser }])
+      .select();
 
     location.reload();
   }
@@ -349,148 +350,149 @@ export default function AlertaGuarda() {
                 <>
                   {alerts
                     ? alerts.map((alert) => (
-                      <tr key={alert.id} className={`${alert.cor}`}>
-                        <td className="p-2  text-center font-medium text-black border-b border-black">
-                          {alert.nome}
-                        </td>
-                        <td className="p-2 text-center font-medium text-black border-b border-black">
-                          {alert.telefone}
-                        </td>
-                        <td className="p-2 text-center font-medium text-black border-b border-black">
-                          {format(
-                            new Date(alert.data),
-                            "dd/MM/yyyy HH:mm:ss"
-                          )}
-                        </td>
-                        <td className="p-2 text-center font-medium border-b border-black">
-                          <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
-                            {Number(alert.precisao).toFixed(1)}m
-                          </span>
-                          <a target="_blank" rel="noopener noreferrer">
-                            <button
-                              onClick={(e) => openDialog(alert)}
-                              className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
-                            >
-                              <span className="text-black font-bold text-sm">
-                                Localização
-                              </span>
-                            </button>
-                            <button
-                              onClick={(e) => openDialogEndereco(alert)}
-                              className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
-                            >
-                              <span className="text-black font-bold text-sm">
-                                Endereço
-                              </span>
-                            </button>
-                            {dialogOpenEndereco && (
-                              <>
+                        <tr key={alert.id} className={`${alert.cor}`}>
+                          <td className="p-2  text-center font-medium text-black border-b border-black">
+                            {alert.nome}
+                          </td>
+                          <td className="p-2 text-center font-medium text-black border-b border-black">
+                            {alert.telefone}
+                          </td>
+                          <td className="p-2 text-center font-medium text-black border-b border-black">
+                            {format(
+                              new Date(alert.data),
+                              "dd/MM/yyyy HH:mm:ss"
+                            )}
+                          </td>
+                          <td className="p-2 text-center font-medium border-b border-black">
+                            <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
+                              {Number(alert.precisao).toFixed(1)}m
+                            </span>
+                            <a target="_blank" rel="noopener noreferrer">
+                              <button
+                                onClick={(e) => openDialog(alert)}
+                                className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
+                              >
+                                <span className="text-black font-bold text-sm">
+                                  Localização
+                                </span>
+                              </button>
+                              <button
+                                onClick={(e) => openDialogEndereco(alert)}
+                                className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                              >
+                                <span className="text-black font-bold text-sm">
+                                  Endereço
+                                </span>
+                              </button>
+                              {dialogOpenEndereco && (
+                                <>
+                                  <div className="fixed inset-0 flex items-center justify-center z-50">
+                                    <div className="absolute inset-0 bg-black opacity-50"></div>
+                                    <div className="bg-white p-4 flex flex-col sm:w-1/4 md:w-2/4 lg:w-1/4 rounded-lg shadow-lg z-10">
+                                      <label htmlFor="nome">
+                                        Nome completo:
+                                      </label>
+                                      <input
+                                        className="border-2 border-black rounded-lg"
+                                        type="text"
+                                        defaultValue={alertData?.nome}
+                                      />
+                                      <label htmlFor="telefone">
+                                        Telefone:
+                                      </label>
+                                      <input
+                                        className="border-2 border-black rounded-lg"
+                                        type="text"
+                                        defaultValue={alertData?.telefone}
+                                      />
+                                      <label htmlFor="rua">Rua:</label>
+                                      <input
+                                        type="text"
+                                        defaultValue={alertData?.rua}
+                                        className="border-2 border-black rounded-lg"
+                                      />
+                                      <label htmlFor="numero">Numero:</label>
+                                      <input
+                                        type="text"
+                                        defaultValue={alertData?.numero}
+                                        className="border-2 border-black rounded-lg"
+                                      />
+                                      <label htmlFor="bairro">Bairro:</label>
+                                      <input
+                                        type="text"
+                                        defaultValue={alertData?.bairro}
+                                        className="border-2 border-black rounded-lg"
+                                      />
+                                      <label htmlFor="cidade">Cidade:</label>
+                                      <input
+                                        type="text"
+                                        defaultValue={alertData?.cidade}
+                                        className="border-2 border-black rounded-lg"
+                                      />
+                                      <button
+                                        onClick={closeDialog2}
+                                        className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
+                                      >
+                                        Fechar
+                                      </button>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                              {openConfimation && (
+                                <>
+                                  <div className="fixed inset-0 flex items-center justify-center z-50">
+                                    <div className="absolute inset-0 bg-black opacity-50"></div>
+                                    <div className="bg-white p-4 flex flex-col w-1/4 rounded-lg shadow-lg z-10">
+                                      Confirme o alerta
+                                      <div>
+                                        <button
+                                          onClick={handleConfirmation}
+                                          className="p-5 mt-2 bg-green-500 rounded-lg"
+                                        >
+                                          Sim, recebi
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                              {dialogOpen && (
                                 <div className="fixed inset-0 flex items-center justify-center z-50">
                                   <div className="absolute inset-0 bg-black opacity-50"></div>
-                                  <div className="bg-white p-4 flex flex-col sm:w-1/4 md:w-2/4 lg:w-1/4 rounded-lg shadow-lg z-10">
-                                    <label htmlFor="nome">
-                                      Nome completo:
-                                    </label>
-                                    <input
-                                      className="border-2 border-black rounded-lg"
-                                      type="text"
-                                      defaultValue={alertData?.nome}
-                                    />
-                                    <label htmlFor="telefone">
-                                      Telefone:
-                                    </label>
-                                    <input
-                                      className="border-2 border-black rounded-lg"
-                                      type="text"
-                                      defaultValue={alertData?.telefone}
-                                    />
-                                    <label htmlFor="rua">Rua:</label>
-                                    <input
-                                      type="text"
-                                      defaultValue={alertData?.rua}
-                                      className="border-2 border-black rounded-lg"
-                                    />
-                                    <label htmlFor="numero">Numero:</label>
-                                    <input
-                                      type="text"
-                                      defaultValue={alertData?.numero}
-                                      className="border-2 border-black rounded-lg"
-                                    />
-                                    <label htmlFor="bairro">Bairro:</label>
-                                    <input
-                                      type="text"
-                                      defaultValue={alertData?.bairro}
-                                      className="border-2 border-black rounded-lg"
-                                    />
-                                    <label htmlFor="cidade">Cidade:</label>
-                                    <input
-                                      type="text"
-                                      defaultValue={alertData?.cidade}
-                                      className="border-2 border-black rounded-lg"
-                                    />
+                                  <div className="bg-white p-4 w-1/2 rounded-lg shadow-lg z-10">
+                                    <Mapa data={alertData} />
                                     <button
-                                      onClick={closeDialog2}
+                                      onClick={closeDialog}
                                       className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
                                     >
                                       Fechar
                                     </button>
                                   </div>
                                 </div>
-                              </>
-                            )}
-                            {openConfimation && (
-                              <>
-                                <div className="fixed inset-0 flex items-center justify-center z-50">
-                                  <div className="absolute inset-0 bg-black opacity-50"></div>
-                                  <div className="bg-white p-4 flex flex-col w-1/4 rounded-lg shadow-lg z-10">
-                                    Confirme o alerta
-                                    <div>
-                                      <button
-                                        onClick={handleConfirmation}
-                                        className="p-5 mt-2 bg-green-500 rounded-lg"
-                                      >
-                                        Sim, recebi
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </>
-                            )}
-                            {dialogOpen && (
-                              <div className="fixed inset-0 flex items-center justify-center z-50">
-                                <div className="absolute inset-0 bg-black opacity-50"></div>
-                                <div className="bg-white p-4 w-1/2 rounded-lg shadow-lg z-10">
-                                  <Mapa data={alertData} />
-                                  <button
-                                    onClick={closeDialog}
-                                    className="mt-4 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
-                                  >
-                                    Fechar
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </a>
-                        </td>
-                        <td
-                          className={`p-2 text-center font-medium border-b border-black`}
-                        >
-                          <Button
-                            onClick={() => handleResolve(alert)}
-                            className={`${alert.cor === "bg-green-500"
-                              ? "bg-blue-500"
-                              : "bg-red-500"
-                              }  hover:bg-slate-500`}
+                              )}
+                            </a>
+                          </td>
+                          <td
+                            className={`p-2 text-center font-medium border-b border-black`}
                           >
-                            <span className="text-black">
-                              {alert.cor === "bg-green-500"
-                                ? "Resolvido"
-                                : "Resolver"}
-                            </span>
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
+                            <Button
+                              onClick={() => handleResolve(alert)}
+                              className={`${
+                                alert.cor === "bg-green-500"
+                                  ? "bg-blue-500"
+                                  : "bg-red-500"
+                              }  hover:bg-slate-500`}
+                            >
+                              <span className="text-black">
+                                {alert.cor === "bg-green-500"
+                                  ? "Resolvido"
+                                  : "Resolver"}
+                              </span>
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
                     : null}
                 </>
               </tbody>
@@ -514,6 +516,26 @@ export default function AlertaGuarda() {
           Próximo
         </button>
       </div>
+        <dialog
+          open
+          ref={dialogRef1}
+          className="sm:w-1/4 md:w-1/3 lg:w-1/4 rounded-lg border-2 fixed inset-0 z-50"
+          style={{ maxHeight: "80vh" }}
+        >
+          <div className="flex justify-end"></div>
+          <div className="flex justify-center p-3">
+            <span>
+            Lamentavelmente, houve um problema com a reprodução do áudio. Por favor, entre em contato com a pessoa afetada ligando diretamente para o celular dela.
+            </span>
+            <div className="flex justify-center"></div>
+            <button
+              className="h-11 mt-10 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
+              onClick={fecharDialog}
+            >
+              Fechar
+            </button>
+          </div>
+        </dialog>
     </>
   );
 }
@@ -526,4 +548,12 @@ async function fetchAllAlertMaria(setAlerts) {
     .select("*");
 
   setAlerts(alertaGuarda?.reverse());
+}
+
+function showModal(dialogRef: RefObject<HTMLDialogElement>) {
+  dialogRef.current?.showModal();
+}
+
+function closeModal(dialogRef: RefObject<HTMLDialogElement>) {
+  dialogRef.current?.close();
 }
