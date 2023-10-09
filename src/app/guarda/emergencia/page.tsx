@@ -517,7 +517,6 @@ export default function AlertaGuarda() {
         </button>
       </div>
         <dialog
-          open
           ref={dialogRef1}
           className="sm:w-1/4 md:w-1/3 lg:w-1/4 rounded-lg border-2 fixed inset-0 z-50"
           style={{ maxHeight: "80vh" }}
