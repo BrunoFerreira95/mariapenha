@@ -210,6 +210,10 @@ export default function Maria() {
           if (change.type === "added") {
             let data = change.doc.data();
             pc.addIceCandidate(new RTCIceCandidate(data));
+            if (pc?.iceConnectionState === 'closed' || pc?.iceConnectionState === 'disconnected' || pc?.iceConnectionState === 'failed') {
+              console.log('Failed to connect to screen')
+            } else {
+            }
           }
         });
       });

@@ -38,13 +38,13 @@ export default function GuardaHome() {
             />
           </div>
           <div className="flex justify-end mt-[-100px]">
-          
-          <Image
-            className="sm:h-36 w-20 sm:w-36 mb-9 mr-3"
-            src={InsigniaGCM}
-            alt=""
-          />
-        </div>
+
+            <Image
+              className="sm:h-36 w-20 sm:w-36 mb-9 mr-3"
+              src={InsigniaGCM}
+              alt=""
+            />
+          </div>
         </div>
         <div className="p-4">
           <div className="overflow-x-auto flex justify-center">
@@ -58,13 +58,13 @@ export default function GuardaHome() {
           <div className="flex justify-center mt-10">
             <form method="post">
               <button formAction={"/auth/logout"}>
-                
-              <Image
-                src={Fechar}
-                alt="Fechar"
-                className="h-8 w-8"
+
+                <Image
+                  src={Fechar}
+                  alt="Fechar"
+                  className="h-8 w-8"
                 />
-                </button>
+              </button>
             </form>
 
           </div>
