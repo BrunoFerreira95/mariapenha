@@ -40,7 +40,7 @@ export default function GuardaHome() {
           <div className="flex justify-end mt-[-100px]">
 
             <Image
-              className="sm:h-36 w-20 sm:w-36 mb-9 mr-3"
+              className="sm:h-48 w-20 sm:w-48 sm:mt-3 mr-3"
               src={InsigniaGCM}
               alt=""
             />

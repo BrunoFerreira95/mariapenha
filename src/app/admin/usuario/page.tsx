@@ -48,7 +48,7 @@ const SemPermissoes = () => {
           <SearchBar filter={searchTerm} change={handleSearchChange} />
         </div>
         <div className="flex justify-center">
-          <div className="w-1/4 flex justify-center">
+          <div className="md:w-1/4 flex justify-center">
             <Table>
               <TableHeader>
                 <TableRow className="">

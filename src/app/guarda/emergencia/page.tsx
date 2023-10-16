@@ -25,7 +25,7 @@ type AlertProps = {
 }[];
 
 export default function AlertaGuarda() {
-  const [alerts, setAlerts] = useState<AlertProps | null>([]); // Deixe apenas esta declaração
+  const [alerts, setAlerts] = useState<AlertProps | null>([]);
   const [alertData, setAlertData] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogOpenEndereco, setDialogOpenEndereco] = useState(false);
@@ -54,6 +54,8 @@ export default function AlertaGuarda() {
     .subscribe();
 
   const dialogRef1: RefObject<HTMLDialogElement> = useRef(null);
+  const [modalConfirmationClosed, setModalConfirmationClosed] = useState(false);
+
 
   // ------------------------------------------------------------------- VOICE CALL --------------------------------------------------------------------------------
   // // VOICE CALL ---------------------------------------------------------------------------------
@@ -130,6 +132,17 @@ export default function AlertaGuarda() {
         }
       });
     });
+  };
+
+  const handleConfirmation2 = async () => {
+    const { data, error } = await supabase
+      .from("alertaGuarda")
+      .update({ status: "confirmado" })
+      .eq("id", vitima?.id)
+      .select();
+    setOpenConfimation(false);
+    voiceClick();
+    setModalConfirmationClosed(true);  // Atualiza o estado para indicar que o modal de confirmação foi fechado
   };
 
   supabase
@@ -288,30 +301,37 @@ export default function AlertaGuarda() {
   }
   return (
     <>
-      <div className="bg-white max-h-fit min-h-screen">
+      <div className="">
         <div className="grid items-center grid-cols-3">
           <div></div>
           <ButtonVoltar />
           <div className="flex justify-center">
             <Image
-              className="sm:h-52 h-28 w-28 sm:w-52 mb-16"
+              className="sm:h-52 h-28 w-28 sm:w-52"
               src={Logo2}
               alt=""
             />
           </div>
           <div className="flex justify-end ">
             <Image
-              className=" sm:h-36 w-20 sm:w-36 mb-16 mr-3"
+              className="sm:h-36 w-20 sm:w-36 mr-3 md:mb-8"
               src={InsigniaGCM}
               alt=""
             />
           </div>
         </div>
         <div className="flex justify-center">
-          <Button onClick={resetPage}> Cancelar Chamada</Button>
+          {modalConfirmationClosed && (
+            <button
+              className="bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600"
+              onClick={resetPage}
+            >
+              Cancelar Chamada
+            </button>
+          )}
           <input
             ref={callInput}
-            className="bg-white h-8 font-semibold rounded-md mb-2 "
+            className="bg-white h-8 font-semibold rounded-md mb-2"
             defaultValue={inputCallValue}
             hidden
           />
@@ -364,13 +384,13 @@ export default function AlertaGuarda() {
                             )}
                           </td>
                           <td className="p-2 text-center font-medium border-b border-black">
-                            <span className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-4 rounded-full ml-2 transition duration-300 ease-in-out transform hover:scale-105">
+                            <span className="bg-yellow-500 hover:bg-yellow-600 m-2 text-white font-semibold py-1 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
                               {Number(alert.precisao).toFixed(1)}m
                             </span>
                             <a target="_blank" rel="noopener noreferrer">
                               <button
                                 onClick={(e) => openDialog(alert)}
-                                className="bg-slate-300 h-8 w-24 rounded-3xl hover:bg-slate-200 ml-2"
+                                className="bg-slate-300 m-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
                               >
                                 <span className="text-black font-bold text-sm">
                                   Localização
@@ -378,7 +398,7 @@ export default function AlertaGuarda() {
                               </button>
                               <button
                                 onClick={(e) => openDialogEndereco(alert)}
-                                className="bg-slate-300 md:ml-2 mt-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
+                                className="bg-slate-300 md:m-2 h-8 w-24 rounded-3xl hover:bg-slate-200"
                               >
                                 <span className="text-black font-bold text-sm">
                                   Endereço
@@ -447,7 +467,7 @@ export default function AlertaGuarda() {
                                       Confirme o alerta
                                       <div>
                                         <button
-                                          onClick={handleConfirmation}
+                                          onClick={handleConfirmation2}
                                           className="p-5 mt-2 bg-green-500 rounded-lg"
                                         >
                                           Sim, recebi
@@ -516,25 +536,25 @@ export default function AlertaGuarda() {
           Próximo
         </button>
       </div>
-        <dialog
-          ref={dialogRef1}
-          className="sm:w-1/4 md:w-1/3 lg:w-1/4 rounded-lg border-2 fixed inset-0 z-50"
-          style={{ maxHeight: "80vh" }}
-        >
-          <div className="flex justify-end"></div>
-          <div className="flex justify-center p-3">
-            <span>
+      <dialog
+        ref={dialogRef1}
+        className="sm:w-1/4 md:w-1/3 lg:w-1/4 rounded-lg border-2 fixed inset-0 z-50"
+        style={{ maxHeight: "80vh" }}
+      >
+        <div className="flex justify-end"></div>
+        <div className="flex justify-center p-3">
+          <span>
             Lamentavelmente, houve um problema com a reprodução do áudio. Por favor, entre em contato com a pessoa afetada ligando diretamente para o celular dela.
-            </span>
-            <div className="flex justify-center"></div>
-            <button
-              className="h-11 mt-10 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
-              onClick={fecharDialog}
-            >
-              Fechar
-            </button>
-          </div>
-        </dialog>
+          </span>
+          <div className="flex justify-center"></div>
+          <button
+            className="h-11 mt-10 bg-gray-300 hover:bg-gray-200 px-3 py-1 rounded-md"
+            onClick={fecharDialog}
+          >
+            Fechar
+          </button>
+        </div>
+      </dialog>
     </>
   );
 }
@@ -555,4 +575,4 @@ function showModal(dialogRef: RefObject<HTMLDialogElement>) {
 
 function closeModal(dialogRef: RefObject<HTMLDialogElement>) {
   dialogRef.current?.close();
-}
+} 
